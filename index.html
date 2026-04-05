@@ -3,61 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية V25 (الوضع الفاتح/الداكن)</title>
+    <title>نظام الإدارة المدرسية V26 (ساعة عقارب ووقت يدوي)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         /* إعدادات الألوان (الوضع الداكن الافتراضي) */
         :root {
-            --bg-color: #0f172a; 
-            --card-bg: #1e293b; 
-            --primary: #38bdf8;
-            --accent: #fbbf24; 
-            --danger: #ef4444; 
-            --success: #22c55e;
-            --prayer: #ffd700; 
-            --text: #f8fafc; 
-            --text-muted: #cbd5e1;
-            --break-color: #10b981;
-            --border-color: rgba(255,255,255,0.1);
-            --header-bg: rgba(30, 41, 59, 0.9);
-            --item-bg: rgba(0,0,0,0.2);
-            --progress-bg: #334155;
-            --class-card-bg: #0f172a;
-            --ticker-bg: #1e293b;
-            --input-bg: #0f172a;
-            --input-border: #334155;
-            --modal-bg: rgba(15, 23, 42, 0.98);
+            --bg-color: #0f172a; --card-bg: #1e293b; --primary: #38bdf8;
+            --accent: #fbbf24; --danger: #ef4444; --success: #22c55e;
+            --prayer: #ffd700; --text: #f8fafc; --text-muted: #cbd5e1;
+            --break-color: #10b981; --border-color: rgba(255,255,255,0.1);
+            --header-bg: rgba(30, 41, 59, 0.9); --item-bg: rgba(0,0,0,0.2);
+            --progress-bg: #334155; --class-card-bg: #0f172a;
+            --ticker-bg: #1e293b; --input-bg: #0f172a;
+            --input-border: #334155; --modal-bg: rgba(15, 23, 42, 0.98);
+            --clock-face: #1e293b; --clock-border: #38bdf8; --hand-color: #f8fafc;
         }
 
         /* إعدادات الألوان (الوضع الفاتح) */
         body.light-mode {
-            --bg-color: #f1f5f9; 
-            --card-bg: #ffffff; 
-            --primary: #0284c7; /* أزرق أغمق للوضوح */
-            --accent: #d97706; /* برتقالي أغمق */
-            --danger: #dc2626; 
-            --success: #16a34a;
-            --prayer: #b45309; 
-            --text: #0f172a; 
-            --text-muted: #475569;
-            --break-color: #059669;
-            --border-color: #e2e8f0;
-            --header-bg: rgba(255, 255, 255, 0.95);
-            --item-bg: #f8fafc;
-            --progress-bg: #e2e8f0;
-            --class-card-bg: #f8fafc;
-            --ticker-bg: #f8fafc;
-            --input-bg: #ffffff;
-            --input-border: #cbd5e1;
-            --modal-bg: rgba(241, 245, 249, 0.98);
+            --bg-color: #f1f5f9; --card-bg: #ffffff; --primary: #0284c7;
+            --accent: #d97706; --danger: #dc2626; --success: #16a34a;
+            --prayer: #b45309; --text: #0f172a; --text-muted: #475569;
+            --break-color: #059669; --border-color: #e2e8f0;
+            --header-bg: rgba(255, 255, 255, 0.95); --item-bg: #f8fafc;
+            --progress-bg: #e2e8f0; --class-card-bg: #f8fafc;
+            --ticker-bg: #f8fafc; --input-bg: #ffffff;
+            --input-border: #cbd5e1; --modal-bg: rgba(241, 245, 249, 0.98);
+            --clock-face: #f8fafc; --clock-border: #0284c7; --hand-color: #0f172a;
         }
 
         ::-webkit-scrollbar { display: none; width: 0; height: 0; }
-        * { 
-            scrollbar-width: none; 
-            -ms-overflow-style: none; 
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; /* حركة ناعمة للتغير */
-        }
+        * { scrollbar-width: none; -ms-overflow-style: none; transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; }
 
         body { background-color: var(--bg-color); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden; box-sizing: border-box; }
         .hidden { display: none !important; }
@@ -66,25 +42,19 @@
         #settings-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: flex-start; overflow-y: auto; padding: 20px; box-sizing: border-box; }
         .settings-card { background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); width: 100%; max-width: 800px; border: 1px solid var(--primary); margin: auto; }
         .settings-card h2 { color: var(--primary); text-align: center; margin-top: 0; font-weight: 900; }
-        
         .form-row { display: flex; gap: 15px; margin-bottom: 12px; }
         .form-group { flex: 1; margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--text-muted); font-size: 14px;}
-        input[type="text"], input[type="number"], input[type="time"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
+        input[type="text"], input[type="number"], input[type="time"], input[type="date"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
         input:focus, select:focus { outline: none; border-color: var(--primary); }
         .section-title { border-bottom: 1px solid var(--primary); color: var(--accent); margin: 15px 0 10px 0; padding-bottom: 5px; font-weight: bold; font-size: 16px; }
-        
         .btn { background: var(--primary); color: #ffffff; border: none; padding: 10px 15px; border-radius: 8px; font-size: 16px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.2s; }
         .btn:hover { opacity: 0.9; transform: scale(1.02); }
         .btn-success { background: var(--success); color: white; padding: 15px; width: 100%; margin-top: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); font-size: 18px;}
         .btn-danger { background: var(--danger); color: white; }
-
         .checkbox-grid { display: flex; flex-wrap: wrap; gap: 8px; background: var(--item-bg); padding: 10px; border-radius: 8px; min-height: 42px; align-items: center;}
         .checkbox-item { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 6px 12px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; color: var(--text);}
-        .checkbox-item:hover { background: rgba(56, 189, 248, 0.2); }
         .checkbox-item input { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--primary); }
-        .empty-classes-msg { color: var(--danger); font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
-
         .break-config-box { background: var(--item-bg); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed rgba(56, 189, 248, 0.3); }
 
         /* محرر الجدول */
@@ -96,30 +66,36 @@
         th, td { border: 1px solid var(--input-border); padding: 8px; text-align: center; color: var(--text); }
         th { background: var(--bg-color); color: var(--accent); }
         td input[type="text"] { padding: 5px; border: none; border-radius: 4px; background: var(--item-bg); text-align: center; font-size: 13px; width: 90%; font-family: 'Cairo';}
-        td input[type="text"]:focus { background: rgba(56, 189, 248, 0.2); }
 
         /* التفعيل */
         #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
         #start-btn { background: var(--primary); color: #ffffff; border: none; padding: 20px 50px; border-radius: 15px; font-size: 3vw; font-family: 'Cairo'; font-weight: bold; cursor: pointer; }
 
-        /* النظام الرئيسي */
+        /* النظام الرئيسي والهيدر المحدث للساعات */
         #main-app { display: flex; flex-direction: column; height: 100%; width: 100%; padding: 0.5vh 1vw; box-sizing: border-box; }
-        
-        header { position: relative; flex-shrink: 0; padding: 1vh; background: var(--header-bg); border-bottom: 2px solid var(--primary); display: flex; flex-direction: column; align-items: center; gap: 3px; border-radius: 10px 10px 0 0; padding-right: 90px; padding-left: 90px; }
+        header { position: relative; flex-shrink: 0; padding: 1.5vh; background: var(--header-bg); border-bottom: 2px solid var(--primary); display: flex; flex-direction: column; align-items: center; gap: 5px; border-radius: 10px 10px 0 0; padding-right: 90px; padding-left: 90px; }
         .logo-right { position: absolute; top: 50%; transform: translateY(-50%); right: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; }
         .logo-left { position: absolute; top: 50%; transform: translateY(-50%); left: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; gap: 10px;}
         .education-logo-img { max-height: 100%; width: auto; object-fit: contain; background-color: rgba(255, 255, 255, 0.9); padding: 5px 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-
-        /* زر التحويل في الهيدر */
         .btn-theme-toggle { background: var(--bg-color); color: var(--text); border: 2px solid var(--primary); padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 1vw; font-family: 'Cairo'; font-weight: bold; display: flex; align-items: center; gap: 5px;}
-        .btn-theme-toggle:hover { background: var(--primary); color: #ffffff; }
 
-        .school-info h1 { margin: 0; font-size: 2.2vw; color: var(--accent); font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
-        .current-time { font-size: 4vw; font-weight: bold; color: var(--text); letter-spacing: 2px; }
+        .school-info h1 { margin: 0; font-size: 2vw; color: var(--accent); font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
+        
+        /* تنسيق الساعات (الرقمية والعقارب) */
+        .clocks-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin-top: 5px; }
+        .current-time { font-size: 5vw; /* تكبير الخط */ font-weight: bold; color: var(--text); letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+        
+        .analog-clock { width: 6vw; height: 6vw; border: 4px solid var(--clock-border); border-radius: 50%; background: var(--clock-face); position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--hand-color); border-radius: 10px; z-index: 10; }
+        .hour-hand { width: 4px; height: 25%; margin-left: -2px; }
+        .minute-hand { width: 3px; height: 35%; margin-left: -1.5px; }
+        .second-hand { width: 2px; height: 40%; margin-left: -1px; background: var(--danger); z-index: 11; }
+        .center-dot { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; transform: translate(-50%, -50%); z-index: 12; }
+
         .dates-container { display: flex; justify-content: center; gap: 30px; background: var(--item-bg); padding: 4px 20px; border-radius: 12px; font-size: 0.9vw; color: var(--text-muted); font-weight: bold;}
 
+        /* باقي التنسيقات */
         .main-body { display: flex; flex: 1; padding: 1vh 0; gap: 15px; box-sizing: border-box; min-height: 0; overflow: hidden; }
-        
         .schedule-sidebar { width: 25%; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overflow-x: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
         .schedule-title { text-align: center; color: var(--primary); font-weight: bold; margin-bottom: 10px; font-size: 1.2vw; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;}
         .schedule-item { background: var(--item-bg); padding: 0.8vh 1vw; border-radius: 8px; display: flex; justify-content: space-between; font-size: 0.95vw; color: var(--text-muted); transition: 0.3s; font-weight: bold;}
@@ -130,7 +106,6 @@
         .schedule-item.prayer-item { color: var(--prayer); border: 1px dashed var(--prayer);}
 
         .main-content { width: 75%; display: flex; flex-direction: column; gap: 10px; overflow: hidden;}
-        
         .status-card { background: var(--card-bg); border-radius: 15px; padding: 1.5vh 3vw; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; flex-direction: column; justify-content: center;}
         .period-now { font-size: 3.5vw; font-weight: 900; color: var(--primary); margin-bottom: 0.5vh; transition: 0.3s; text-shadow: 1px 1px 2px rgba(0,0,0,0.05);}
         .progress-wrapper { width: 100%; height: 1.5vh; background-color: var(--progress-bg); border-radius: 20px; overflow: hidden; margin: 1vh 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);}
@@ -144,29 +119,22 @@
 
         .live-grid-container { flex: 1; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
         .live-grid-title { text-align: center; color: var(--accent); font-size: 1.3vw; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
-        
         .classes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16%, 1fr)); gap: 8px; align-content: start; overflow-y: auto;}
         .class-card { background: var(--class-card-bg); border: 1px solid var(--input-border); border-radius: 8px; padding: 1vh 0.5vw; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; transition: 0.3s;}
         .c-name { font-size: 1.1vw; color: var(--accent); font-weight: 900; margin-bottom: 3px; border-bottom: 1px solid var(--border-color); padding-bottom: 3px;}
         .c-subject { font-size: 1vw; color: var(--text); font-weight: bold; line-height: 1.3;}
-        
         .class-card.in-break { background: rgba(16, 185, 129, 0.1); border-color: var(--break-color); }
         .class-card.in-break .c-subject { color: var(--break-color); font-size: 1.1vw; }
 
         .news-ticker-container { flex-shrink: 0; width: 100%; background: var(--ticker-bg); color: var(--accent); overflow: hidden; display: flex; align-items: center; border-top: 1px solid var(--primary); font-size: 1.3vw; font-weight: bold; padding: 0;}
         .ticker-label { background: var(--primary); color: #ffffff; padding: 0.8vh 2vw; z-index: 10; font-weight: 900; }
         .ticker-wrapper { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 100%; display: flex; align-items: center; direction: ltr; }
-        
         .ticker-content { display: inline-block; white-space: nowrap; position: absolute; animation: marquee-ltr 35s linear infinite; will-change: transform; left: 0;}
         @keyframes marquee-ltr { 0% { transform: translate3d(-100%, 0, 0); } 100% { transform: translate3d(100vw, 0, 0); } }
 
         .footer-bar { flex-shrink: 0; background: var(--primary); color: #ffffff; font-weight: bold; font-size: 0.9vw; min-height: 3.5vh; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-radius: 0 0 10px 10px;}
-
-        .logo-upload-section { display: flex; gap: 15px; }
-        .logo-preview-box { flex: 1; border: 2px dashed var(--border-color); border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;}
-        .logo-preview-image { max-height: 60px; max-width: 100%; object-fit: contain; background-color: rgba(255,255,255,0.9); padding: 5px; border-radius: 5px; margin-bottom: 10px; display: none; border: 1px solid #ccc;}
-        .empty-placeholder { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
-        .upload-btn { display: inline-block; margin-top: auto; color: #fff !important;}
+        
+        .manual-time-box { background: rgba(239, 68, 68, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed var(--danger); margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -176,21 +144,32 @@
 
     <div id="settings-container">
         <div class="settings-card">
-            <h2>⚙️ لوحة التحكم - الإعدادات العامة V25</h2>
+            <h2>⚙️ لوحة التحكم - الإعدادات العامة V26</h2>
             <div class="form-row">
                 <div class="form-group" style="flex: 2;"><label>المدرسة:</label><input type="text" id="cfg-school"></div>
                 <div class="form-group" style="flex: 1.5;">
                     <label>المدير / الإدارة:</label>
                     <div style="display: flex; gap: 5px;">
-                        <select id="cfg-principal-title" style="flex: 1; padding: 10px;">
-                            <option value="مدير المدرسة">مدير المدرسة</option><option value="مديرة المدرسة">مديرة المدرسة</option><option value="مدير المجمع">مدير المجمع</option><option value="إدارة">إدارة</option>
-                        </select>
+                        <select id="cfg-principal-title" style="flex: 1; padding: 10px;"><option value="مدير المدرسة">مدير المدرسة</option><option value="مديرة المدرسة">مديرة المدرسة</option><option value="مدير المجمع">مدير المجمع</option><option value="إدارة">إدارة</option></select>
                         <input type="text" id="cfg-principal" style="flex: 1.5;" placeholder="الاسم هنا...">
                     </div>
                 </div>
             </div>
             <div class="form-group"><label>شريط الأخبار:</label><input type="text" id="cfg-news"></div>
             
+            <div class="manual-time-box">
+                <div style="color: var(--danger); font-weight: bold; margin-bottom: 10px;">🕒 معالجة مشكلة وقت الشاشة (الوقت اليدوي)</div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <input type="checkbox" id="cfg-manual-time-enable" style="width: auto;" onchange="toggleManualTimeInputs()">
+                    <label for="cfg-manual-time-enable" style="margin: 0; cursor: pointer; color: var(--text);">تفعيل ضبط الوقت والتاريخ يدوياً (إذا كانت الشاشة تخطئ في الوقت)</label>
+                </div>
+                <div class="form-row" id="manual-time-inputs" style="opacity: 0.5; pointer-events: none;">
+                    <div class="form-group"><label>التاريخ الصحيح:</label><input type="date" id="cfg-manual-date"></div>
+                    <div class="form-group"><label>الوقت الصحيح الآن:</label><input type="time" id="cfg-manual-time"></div>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted);">* عند الحفظ، سيحسب النظام الفارق ويستمر بالعمل بدقة. دع الخيار معطلاً إذا كان وقت الشاشة صحيحاً تلقائياً.</div>
+            </div>
+
             <div class="section-title">التوقيت والحصص</div>
             <div class="form-row">
                 <div class="form-group"><label>بداية الطابور:</label><input type="time" id="cfg-start" value="06:45"></div>
@@ -204,14 +183,10 @@
                 <div class="form-group">
                     <label>كم عدد الفسح في مدرستك؟</label>
                     <select id="cfg-num-breaks" onchange="renderDynamicBreaksUI()">
-                        <option value="0">بدون فسحة</option>
-                        <option value="1">فسحة واحدة</option>
-                        <option value="2" selected>فسحتين</option>
-                        <option value="3">3 فسح</option>
+                        <option value="0">بدون فسحة</option><option value="1">فسحة واحدة</option><option value="2" selected>فسحتين</option><option value="3">3 فسح</option>
                     </select>
                 </div>
             </div>
-            
             <div id="dynamic-breaks-container"></div>
             
             <div class="form-row">
@@ -219,42 +194,21 @@
                 <div class="form-group" style="flex: 1;"><label>مدتها:</label><input type="number" id="cfg-prayer-dur" value="20"></div>
             </div>
 
-            <div class="section-title" style="color: var(--success);">تخصيص الهوية البصرية للشاشة</div>
-            <div class="logo-upload-section">
-                <div class="logo-preview-box">
-                    <div style="color: var(--primary); font-weight: bold; margin-bottom: 5px;">شعار التعليم (يمين)</div>
-                    <img id="preview-edu" alt="معاينة" class="logo-preview-image">
-                    <div id="placeholder-edu" class="empty-placeholder">لم يتم اختيار صورة</div>
-                    <button class="btn upload-btn" style="background: var(--primary);" onclick="document.getElementById('edu-logo-input').click()">⬆️ رفع من الجهاز</button>
-                    <button class="btn" style="background: transparent; color: var(--danger); font-size: 12px; margin-top: 5px;" onclick="removeLogo('edu')">حذف الشعار</button>
-                </div>
-                <div class="logo-preview-box">
-                    <div style="color: var(--accent); font-weight: bold; margin-bottom: 5px;">شعار المدرسة (يسار)</div>
-                    <img id="preview-school" alt="معاينة" class="logo-preview-image">
-                    <div id="placeholder-school" class="empty-placeholder">لم يتم اختيار صورة</div>
-                    <button class="btn upload-btn" style="background: var(--accent);" onclick="document.getElementById('school-logo-input').click()">⬆️ رفع من الجهاز</button>
-                    <button class="btn" style="background: transparent; color: var(--danger); font-size: 12px; margin-top: 5px;" onclick="removeLogo('school')">حذف الشعار</button>
-                </div>
+            <div class="section-title" style="color: var(--success);">تخصيص الهوية البصرية وشعار المدرسة</div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" style="flex: 1;" onclick="document.getElementById('edu-logo-input').click()">رفع شعار التعليم</button>
+                <button class="btn" style="flex: 1; background: var(--accent);" onclick="document.getElementById('school-logo-input').click()">رفع شعار المدرسة</button>
             </div>
 
             <div style="background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed var(--success); margin-bottom: 15px; margin-top: 15px;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <input type="checkbox" id="cfg-enable-table" checked style="width: auto; display: inline-block;">
-                        <label for="cfg-enable-table" style="display: inline-block; font-weight: bold; color: var(--success); cursor: pointer;">تفعيل وعرض الجدول في الشاشة</label>
-                    </div>
+                    <div><input type="checkbox" id="cfg-enable-table" checked style="width: auto; display: inline-block;"> <label for="cfg-enable-table" style="display: inline-block; font-weight: bold; color: var(--success); cursor: pointer;">تفعيل عرض الجدول</label></div>
                     <button class="btn" style="background: var(--success);" onclick="openEditor()">📝 تعبئة جدول الفصول</button>
                 </div>
             </div>
 
             <button class="btn btn-success" onclick="saveConfiguration()">حفظ الإعدادات وبدء التشغيل 🚀</button>
-            
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--primary); color: var(--primary);" onclick="exportConfig()">📋 تصدير الأوقات</button>
-                <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--success); color: var(--success);" onclick="importConfig()">📥 استيراد الأوقات</button>
-                <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--danger); color: var(--danger);" onclick="factoryReset()">🗑️ إعادة ضبط المصنع</button>
-            </div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px; text-align: center;">الاستيراد والتصدير ينقل (الأوقات والفسح) برمز مشفر ذكي للبرمجة السريعة للشاشات الأخرى.</div>
+            <button class="btn" style="background: transparent; border: 1px dashed var(--danger); color: var(--danger); width: 100%; margin-top: 10px;" onclick="factoryReset()">🗑️ إعادة ضبط المصنع</button>
         </div>
     </div>
 
@@ -264,23 +218,10 @@
             <button class="btn btn-danger" onclick="closeEditor()">إغلاق وحفظ مؤقت</button>
         </div>
         <div class="editor-controls">
-            <div style="flex: 1;">
-                <label style="color: var(--accent); font-weight: bold;">اختر اليوم:</label>
-                <select id="editor-day-select" style="width: 200px; display: inline-block; margin-right: 10px;" onchange="renderEditorTable()">
-                    <option value="0">الأحد</option><option value="1">الإثنين</option><option value="2">الثلاثاء</option><option value="3">الأربعاء</option><option value="4">الخميس</option>
-                </select>
-            </div>
-            <div>
-                <input type="text" id="new-class-name" placeholder="مثال: الصف السادس أ" style="width: 200px; display: inline-block;">
-                <button class="btn" onclick="addClass()">➕ إضافة فصل</button>
-            </div>
+            <div style="flex: 1;"><label style="color: var(--accent); font-weight: bold;">اختر اليوم:</label><select id="editor-day-select" style="width: 200px; display: inline-block; margin-right: 10px;" onchange="renderEditorTable()"><option value="0">الأحد</option><option value="1">الإثنين</option><option value="2">الثلاثاء</option><option value="3">الأربعاء</option><option value="4">الخميس</option></select></div>
+            <div><input type="text" id="new-class-name" placeholder="مثال: الصف السادس أ" style="width: 200px; display: inline-block;"><button class="btn" onclick="addClass()">➕ إضافة فصل</button></div>
         </div>
-        <div class="table-wrapper">
-            <table>
-                <thead><tr id="editor-thead"></tr></thead>
-                <tbody id="editor-tbody"></tbody>
-            </table>
-        </div>
+        <div class="table-wrapper"><table><thead><tr id="editor-thead"></tr></thead><tbody id="editor-tbody"></tbody></table></div>
     </div>
 
     <div id="start-overlay" class="hidden">
@@ -290,25 +231,31 @@
 
     <div id="main-app" class="hidden">
         <header>
-            <div class="logo-right" id="header-logo-edu" style="display: none;"><img id="img-header-edu" src="" alt="شعار التعليم" class="education-logo-img"></div>
-            
+            <div class="logo-right" id="header-logo-edu" style="display: none;"><img id="img-header-edu" src="" class="education-logo-img"></div>
             <div class="logo-left">
-                <img id="img-header-school" src="" alt="شعار المدرسة" class="education-logo-img" style="display: none;">
+                <img id="img-header-school" src="" class="education-logo-img" style="display: none;">
                 <button class="btn-theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️ فاتح</button>
             </div>
 
             <div class="school-info"><h1 id="display-school-name">--</h1></div>
-            <div class="current-time" id="clock">00:00:00</div>
+            
+            <div class="clocks-container">
+                <div class="analog-clock">
+                    <div class="hand hour-hand" id="hr-hand"></div>
+                    <div class="hand minute-hand" id="mn-hand"></div>
+                    <div class="hand second-hand" id="sc-hand"></div>
+                    <div class="center-dot"></div>
+                </div>
+                <div class="current-time" id="clock">00:00:00</div>
+            </div>
+
             <div class="dates-container">
                 <div class="date-box" id="hijri-date"><span>الهجري:</span> --</div>
                 <div class="date-box" id="greg-date"><span>الميلادي:</span> --</div>
             </div>
         </header>
         <div class="main-body">
-            <aside class="schedule-sidebar">
-                <div class="schedule-title">الجدول الزمني</div>
-                <div id="schedule-list"></div>
-            </aside>
+            <aside class="schedule-sidebar"><div class="schedule-title">الجدول الزمني</div><div id="schedule-list"></div></aside>
             <main class="main-content">
                 <div class="status-card">
                     <div class="period-now" id="main-period">جاري التحميل...</div>
@@ -320,23 +267,15 @@
                             <div class="progress-stats"><span id="progress-percent">0%</span><span id="elapsed-time">مضى: 00:00</span></div>
                         </div>
                     </div>
-                    <div id="break-alert-bar" class="break-alert-bar hidden">
-                        <span id="break-alert-title">🔔 تنبيه: بعض الفصول في فسحة، والحصص مستمرة للبقية</span>
-                        <span id="break-alert-timer">متبقي: 00:00</span>
-                    </div>
+                    <div id="break-alert-bar" class="break-alert-bar hidden"><span id="break-alert-title">🔔 تنبيه: بعض الفصول في فسحة</span><span id="break-alert-timer">متبقي: 00:00</span></div>
                 </div>
-
                 <div class="live-grid-container" id="live-grid-container" style="display: none;">
-                    <div class="live-grid-title" id="live-grid-title">جدول الحصص (الآن)</div>
-                    <div class="classes-grid" id="classes-grid"></div>
+                    <div class="live-grid-title" id="live-grid-title">جدول الحصص (الآن)</div><div class="classes-grid" id="classes-grid"></div>
                 </div>
             </main>
         </div>
         <div class="news-ticker-container" id="news-container">
-            <div class="ticker-label">إعلانات</div>
-            <div class="ticker-wrapper" style="direction: ltr;">
-                <div class="ticker-content" id="display-news" style="direction: rtl;"></div>
-            </div>
+            <div class="ticker-label">إعلانات</div><div class="ticker-wrapper" style="direction: ltr;"><div class="ticker-content" id="display-news" style="direction: rtl;"></div></div>
         </div>
         <div class="footer-bar">
             <div id="display-principal-name" style="flex:1;"></div>
@@ -346,552 +285,250 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'SMART_SCHOOL_V25_DYNAMIC'; 
+        const STORAGE_KEY = 'SMART_SCHOOL_V26_DYNAMIC'; 
         let systemActive = false, schoolConfig = null, dynamicSchedule = [];
-        let audioCtx = null, announcedStart = null, announcedEnd = null;
-        
-        let classesList = []; 
-        let fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
+        let classesList = [], fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
         const ordinals = ["", "الأولى", "الثانية", "الثالثة", "الرابعة", "الخامسة", "السادسة", "السابعة", "الثامنة", "التاسعة", "العاشرة"];
 
-        // --- كود تبديل الوضع (Dark/Light Mode) ---
         function toggleTheme() {
-            const body = document.body;
-            const btn = document.getElementById('theme-btn');
+            const body = document.body; const btn = document.getElementById('theme-btn');
             body.classList.toggle('light-mode');
-            
-            if (body.classList.contains('light-mode')) {
-                localStorage.setItem('school_theme_pref', 'light');
-                btn.innerHTML = '🌙 داكن';
-            } else {
-                localStorage.setItem('school_theme_pref', 'dark');
-                btn.innerHTML = '☀️ فاتح';
-            }
+            if (body.classList.contains('light-mode')) { localStorage.setItem('school_theme_pref', 'light'); btn.innerHTML = '🌙 داكن'; } 
+            else { localStorage.setItem('school_theme_pref', 'dark'); btn.innerHTML = '☀️ فاتح'; }
         }
 
         function loadThemePreference() {
             const savedTheme = localStorage.getItem('school_theme_pref');
-            const body = document.body;
-            const btn = document.getElementById('theme-btn');
-            
-            if (savedTheme === 'light') {
-                body.classList.add('light-mode');
-                if(btn) btn.innerHTML = '🌙 داكن';
-            } else {
-                // Default is dark
-                body.classList.remove('light-mode');
-                if(btn) btn.innerHTML = '☀️ فاتح';
+            if (savedTheme === 'light') { document.body.classList.add('light-mode'); document.getElementById('theme-btn').innerHTML = '🌙 داكن'; } 
+        }
+
+        function toggleManualTimeInputs() {
+            const isChecked = document.getElementById('cfg-manual-time-enable').checked;
+            const container = document.getElementById('manual-time-inputs');
+            container.style.opacity = isChecked ? '1' : '0.5';
+            container.style.pointerEvents = isChecked ? 'auto' : 'none';
+            if(isChecked) {
+                let d = new Date();
+                document.getElementById('cfg-manual-date').value = d.toISOString().split('T')[0];
+                document.getElementById('cfg-manual-time').value = String(d.getHours()).padStart(2,'0') + ":" + String(d.getMinutes()).padStart(2,'0');
             }
         }
-        // ----------------------------------------
 
         function processImageUpload(event, type) {
-            const file = event.target.files[0];
-            if (!file) return;
+            const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width; let height = img.height;
-                    const MAX_WIDTH = 300; 
-                    if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
+                    const canvas = document.createElement('canvas'); let width = img.width, height = img.height;
+                    if (width > 300) { height = Math.round((height * 300) / width); width = 300; }
                     canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
-                    const compressedBase64 = canvas.toDataURL('image/png', 0.9);
-                    if (type === 'edu') schoolConfig.eduLogo = compressedBase64; else schoolConfig.schoolLogo = compressedBase64;
-                    updateLogoPreviews(); 
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    if (type === 'edu') schoolConfig.eduLogo = canvas.toDataURL('image/png', 0.9); else schoolConfig.schoolLogo = canvas.toDataURL('image/png', 0.9);
                 }
                 img.src = e.target.result;
             }
             reader.readAsDataURL(file); event.target.value = ''; 
         }
 
-        function removeLogo(type) {
-            if (type === 'edu') schoolConfig.eduLogo = null; else schoolConfig.schoolLogo = null;
-            updateLogoPreviews();
-        }
-
-        function updateLogoPreviews() {
-            if(!schoolConfig) return;
-            const pEdu = document.getElementById('preview-edu'); const hEdu = document.getElementById('placeholder-edu');
-            if (schoolConfig.eduLogo) { pEdu.src = schoolConfig.eduLogo; pEdu.style.display = 'block'; hEdu.style.display = 'none'; } 
-            else { pEdu.style.display = 'none'; hEdu.style.display = 'block'; }
-
-            const pSchool = document.getElementById('preview-school'); const hSchool = document.getElementById('placeholder-school');
-            if (schoolConfig.schoolLogo) { pSchool.src = schoolConfig.schoolLogo; pSchool.style.display = 'block'; hSchool.style.display = 'none'; } 
-            else { pSchool.style.display = 'none'; hSchool.style.display = 'block'; }
-        }
-
         function applyLogosToHeader() {
             if(!schoolConfig) return;
-            const containerEdu = document.getElementById('header-logo-edu'); const imgEdu = document.getElementById('img-header-edu');
-            if (schoolConfig.eduLogo) { imgEdu.src = schoolConfig.eduLogo; containerEdu.style.display = 'flex'; } else { containerEdu.style.display = 'none'; }
-            
-            const imgSchool = document.getElementById('img-header-school');
-            if (schoolConfig.schoolLogo) { imgSchool.src = schoolConfig.schoolLogo; imgSchool.style.display = 'block'; } else { imgSchool.style.display = 'none'; }
+            const cEdu = document.getElementById('header-logo-edu'), iEdu = document.getElementById('img-header-edu');
+            if (schoolConfig.eduLogo) { iEdu.src = schoolConfig.eduLogo; cEdu.style.display = 'flex'; } else cEdu.style.display = 'none';
+            const iSch = document.getElementById('img-header-school');
+            if (schoolConfig.schoolLogo) { iSch.src = schoolConfig.schoolLogo; iSch.style.display = 'block'; } else iSch.style.display = 'none';
         }
 
         function loadDemoData() {
             schoolConfig = {
-                schoolName: "مدرسة عثمان بن عفان (النموذجية)", principalTitle: "مدير المدرسة", principalName: "أ. علي إبراهيم",
-                newsTicker: "أهلاً بكم في نظام الإدارة المدرسية الذكي.. نتمنى لكم يوماً دراسياً موفقاً ومليئاً بالنجاح",
-                startTime: "06:45", assemblyDur: 15, lessonDur: 45, totalLessons: 7,
-                breaks: [
-                    { after: 3, duration: 15, classes: ["الصف الأول", "الصف الثاني", "الصف الثالث"] },
-                    { after: 5, duration: 15, classes: ["الصف الرابع", "الصف الخامس", "الصف السادس"] }
-                ],
-                prayerAfter: 6, prayerDur: 20, enableTable: true, eduLogo: null, schoolLogo: null 
+                schoolName: "مدرسة عثمان بن عفان", principalTitle: "مدير المدرسة", principalName: "أ. علي",
+                newsTicker: "أهلاً بكم في نظام الإدارة المدرسية الذكي", startTime: "06:45", assemblyDur: 15, lessonDur: 45, totalLessons: 7,
+                breaks: [{ after: 3, duration: 15, classes: [] }, { after: 5, duration: 15, classes: [] }],
+                prayerAfter: 6, prayerDur: 20, enableTable: true, eduLogo: null, schoolLogo: null, timeOffsetMs: 0 
             };
-
-            classesList = ["الصف الأول", "الصف الثاني", "الصف الثالث", "الصف الرابع", "الصف الخامس", "الصف السادس"];
-            const demoSubjects = [
-                ["لغتي - أ. محمد", "رياضيات - أ. علي", "علوم - أ. حسن", "قرآن - أ. أحمد", "بدنية - أ. إبراهيم", "إسلامية - أ. خالد", "فنية - أ. فهد"],
-                ["قرآن - أ. عبدالرحمن", "لغتي - أ. ناصر", "رياضيات - أ. يوسف", "إنجليزي - أ. عبدالله", "اجتماعيات - أ. سعيد", "علوم - أ. طارق", "حاسب - أ. فيصل"],
-                ["رياضيات - أ. سامي", "علوم - أ. طارق", "فنية - أ. فهد", "لغتي - أ. محمد", "بدنية - أ. إبراهيم", "قرآن - أ. أحمد", "إسلامية - أ. خالد"],
-                ["اجتماعيات - أ. سعيد", "إنجليزي - أ. عبدالله", "رياضيات - أ. علي", "حاسب - أ. فيصل", "لغتي - أ. ناصر", "علوم - أ. حسن", "قرآن - أ. عبدالرحمن"],
-                ["علوم - أ. حسن", "رياضيات - أ. يوسف", "لغتي - أ. محمد", "قرآن - أ. أحمد", "إسلامية - أ. خالد", "بدنية - أ. إبراهيم", "اجتماعيات - أ. سعيد"],
-                ["إنجليزي - أ. عبدالله", "قرآن - أ. عبدالرحمن", "حاسب - أ. فيصل", "رياضيات - أ. سامي", "لغتي - أ. ناصر", "علوم - أ. طارق", "فنية - أ. فهد"]
-            ];
-            for(let d=0; d<5; d++) {
-                classesList.forEach((cls, idx) => {
-                    let daySchedule = [];
-                    for(let p=0; p<7; p++) { daySchedule.push(demoSubjects[idx][(p + d) % 7]); }
-                    fullTimetable[d][cls] = daySchedule;
-                });
-            }
         }
 
         window.onload = function() {
-            loadThemePreference(); // استدعاء دالة الثيم عند التحميل
-            
-            const savedData = localStorage.getItem(STORAGE_KEY);
-            // محاولة جلب البيانات من النسخة السابقة إذا لم تكن موجودة في الجديدة
-            const oldData = localStorage.getItem('SMART_SCHOOL_V24_DYNAMIC'); 
-
-            if (savedData || oldData) {
-                let parsed = JSON.parse(savedData || oldData);
+            loadThemePreference(); 
+            const savedData = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('SMART_SCHOOL_V25_DYNAMIC');
+            if (savedData) {
+                let parsed = JSON.parse(savedData);
                 schoolConfig = parsed.config;
                 if(!schoolConfig.breaks) schoolConfig.breaks = []; 
-                classesList = parsed.classes || [];
-                fullTimetable = parsed.timetable || { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} };
-            } else {
-                loadDemoData(); 
-            }
+                if(!schoolConfig.timeOffsetMs) schoolConfig.timeOffsetMs = 0;
+                classesList = parsed.classes || []; fullTimetable = parsed.timetable || { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} };
+            } else { loadDemoData(); }
             populateSettingsForm();
-            document.getElementById('settings-container').classList.add('hidden');
-            document.getElementById('start-overlay').classList.remove('hidden');
+            document.getElementById('settings-container').classList.add('hidden'); document.getElementById('start-overlay').classList.remove('hidden');
             document.getElementById('welcome-school-name').innerText = schoolConfig.schoolName;
             generateSchedule();
         };
 
-        // توليد واجهة الفسح بناءً على العدد المختار
         function renderDynamicBreaksUI() {
             const num = parseInt(document.getElementById('cfg-num-breaks').value);
-            const container = document.getElementById('dynamic-breaks-container');
             let html = "";
             for(let i=0; i<num; i++) {
-                let existingAfter = (schoolConfig && schoolConfig.breaks && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].after : "";
-                let existingDur = (schoolConfig && schoolConfig.breaks && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].duration : 15;
-
-                html += `
-                <div class="break-config-box">
-                    <div style="color: var(--primary); font-weight: bold; margin-bottom: 10px;">الفسحة رقم (${i+1})</div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 1;"><label>بعد الحصة:</label><input type="number" id="cfg-break-after-${i}" value="${existingAfter}"></div>
-                        <div class="form-group" style="flex: 1;"><label>مدتها (دقائق):</label><input type="number" id="cfg-break-dur-${i}" value="${existingDur}"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>الفصول المخصصة لهذه الفسحة (ضع علامة صح):</label>
-                        <div id="break-checkboxes-${i}" class="checkbox-grid"></div>
-                    </div>
-                </div>`;
+                let eA = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].after : "";
+                let eD = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].duration : 15;
+                html += `<div class="break-config-box"><div style="color:var(--primary);font-weight:bold;margin-bottom:10px;">الفسحة رقم (${i+1})</div><div class="form-row"><div class="form-group"><label>بعد الحصة:</label><input type="number" id="cfg-break-after-${i}" value="${eA}"></div><div class="form-group"><label>مدتها (دقائق):</label><input type="number" id="cfg-break-dur-${i}" value="${eD}"></div></div><div class="form-group"><label>الفصول المخصصة (ضع علامة صح):</label><div id="break-checkboxes-${i}" class="checkbox-grid"></div></div></div>`;
             }
-            container.innerHTML = html;
-            renderBreakCheckboxes();
-        }
-
-        // توليد الـ Checkboxes الذكية
-        function renderBreakCheckboxes() {
-            const num = parseInt(document.getElementById('cfg-num-breaks').value);
-            
+            document.getElementById('dynamic-breaks-container').innerHTML = html;
             for(let i=0; i<num; i++) {
-                const bContainer = document.getElementById(`break-checkboxes-${i}`);
-                if(!bContainer) continue;
-                
-                if(classesList.length === 0) {
-                    bContainer.innerHTML = '<div class="empty-classes-msg">قم بإضافة الفصول من زر "تعبئة جدول الفصول" أولاً.</div>';
-                    continue;
-                }
-
-                bContainer.innerHTML = '';
-                let existingClasses = (schoolConfig && schoolConfig.breaks && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].classes : [];
-
-                classesList.forEach(cls => {
-                    let checked = existingClasses.includes(cls) ? 'checked' : '';
-                    bContainer.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${cls}" class="b-chk-${i}" ${checked}> ${cls}</label>`;
-                });
+                let bC = document.getElementById(`break-checkboxes-${i}`);
+                if(classesList.length === 0) { bC.innerHTML = '<div style="color:red; font-size:12px;">أضف فصولاً من الجدول أولاً</div>'; continue; }
+                let eC = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].classes : [];
+                classesList.forEach(cls => { let c = eC.includes(cls) ? 'checked' : ''; bC.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${cls}" class="b-chk-${i}" ${c}> ${cls}</label>`; });
             }
         }
 
         function populateSettingsForm() {
             if(!schoolConfig) return;
-            document.getElementById('cfg-school').value = schoolConfig.schoolName;
-            document.getElementById('cfg-principal-title').value = schoolConfig.principalTitle;
-            document.getElementById('cfg-principal').value = schoolConfig.principalName;
-            document.getElementById('cfg-news').value = schoolConfig.newsTicker;
-            document.getElementById('cfg-start').value = schoolConfig.startTime;
-            document.getElementById('cfg-assembly-dur').value = schoolConfig.assemblyDur;
-            document.getElementById('cfg-lesson-dur').value = schoolConfig.lessonDur;
-            document.getElementById('cfg-total-lessons').value = schoolConfig.totalLessons;
-            document.getElementById('cfg-prayer-after').value = schoolConfig.prayerAfter;
-            document.getElementById('cfg-prayer-dur').value = schoolConfig.prayerDur;
-            document.getElementById('cfg-enable-table').checked = schoolConfig.enableTable;
-            
-            // تعيين عدد الفسح وتوليد الواجهة
-            let numBreaks = (schoolConfig.breaks && Array.isArray(schoolConfig.breaks)) ? schoolConfig.breaks.length : 0;
-            document.getElementById('cfg-num-breaks').value = numBreaks;
-            renderDynamicBreaksUI();
-            
-            updateLogoPreviews(); 
+            document.getElementById('cfg-school').value = schoolConfig.schoolName; document.getElementById('cfg-principal-title').value = schoolConfig.principalTitle; document.getElementById('cfg-principal').value = schoolConfig.principalName; document.getElementById('cfg-news').value = schoolConfig.newsTicker; document.getElementById('cfg-start').value = schoolConfig.startTime; document.getElementById('cfg-assembly-dur').value = schoolConfig.assemblyDur; document.getElementById('cfg-lesson-dur').value = schoolConfig.lessonDur; document.getElementById('cfg-total-lessons').value = schoolConfig.totalLessons; document.getElementById('cfg-prayer-after').value = schoolConfig.prayerAfter; document.getElementById('cfg-prayer-dur').value = schoolConfig.prayerDur; document.getElementById('cfg-enable-table').checked = schoolConfig.enableTable;
+            document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length; renderDynamicBreaksUI();
         }
 
         function saveConfiguration() {
-            const numBreaks = parseInt(document.getElementById('cfg-num-breaks').value);
-            let breaksArr = [];
-            for(let i=0; i<numBreaks; i++) {
-                let after = parseInt(document.getElementById(`cfg-break-after-${i}`).value) || 0;
-                let dur = parseInt(document.getElementById(`cfg-break-dur-${i}`).value) || 0;
-                let selectedClasses = Array.from(document.querySelectorAll(`.b-chk-${i}:checked`)).map(cb => cb.value);
-                breaksArr.push({ after: after, duration: dur, classes: selectedClasses });
-            }
-
-            const config = {
-                schoolName: document.getElementById('cfg-school').value || "المدرسة",
-                principalTitle: document.getElementById('cfg-principal-title').value,
-                principalName: document.getElementById('cfg-principal').value.trim(),
-                newsTicker: document.getElementById('cfg-news').value.trim(),
-                startTime: document.getElementById('cfg-start').value || "07:00",
-                assemblyDur: parseInt(document.getElementById('cfg-assembly-dur').value) || 0,
-                lessonDur: parseInt(document.getElementById('cfg-lesson-dur').value) || 45,
-                totalLessons: parseInt(document.getElementById('cfg-total-lessons').value) || 7,
-                breaks: breaksArr, 
-                prayerAfter: parseInt(document.getElementById('cfg-prayer-after').value) || 0,
-                prayerDur: parseInt(document.getElementById('cfg-prayer-dur').value) || 0,
-                enableTable: document.getElementById('cfg-enable-table').checked,
-                eduLogo: schoolConfig.eduLogo, schoolLogo: schoolConfig.schoolLogo
-            };
+            const numBreaks = parseInt(document.getElementById('cfg-num-breaks').value); let breaksArr = [];
+            for(let i=0; i<numBreaks; i++) { let after = parseInt(document.getElementById(`cfg-break-after-${i}`).value)||0; let dur = parseInt(document.getElementById(`cfg-break-dur-${i}`).value)||0; let sel = Array.from(document.querySelectorAll(`.b-chk-${i}:checked`)).map(cb => cb.value); breaksArr.push({ after: after, duration: dur, classes: sel }); }
             
-            const payload = { config: config, classes: classesList, timetable: fullTimetable };
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); alert("تم حفظ النظام بنجاح!"); location.reload(); } 
-            catch (e) { alert("عفواً، سعة الذاكرة ممتلئة! الصورة المرفوعة قد تكون غير صالحة."); }
+            // حساب فرق الوقت اليدوي
+            let offset = 0;
+            if(document.getElementById('cfg-manual-time-enable').checked) {
+                let dateVal = document.getElementById('cfg-manual-date').value;
+                let timeVal = document.getElementById('cfg-manual-time').value;
+                if(dateVal && timeVal) {
+                    let targetMs = new Date(`${dateVal}T${timeVal}:00`).getTime();
+                    let currentMs = new Date().getTime();
+                    offset = targetMs - currentMs;
+                }
+            } else { offset = 0; } // تصفير إذا تم إلغاء الخيار
+
+            const config = { schoolName: document.getElementById('cfg-school').value, principalTitle: document.getElementById('cfg-principal-title').value, principalName: document.getElementById('cfg-principal').value, newsTicker: document.getElementById('cfg-news').value, startTime: document.getElementById('cfg-start').value, assemblyDur: parseInt(document.getElementById('cfg-assembly-dur').value)||0, lessonDur: parseInt(document.getElementById('cfg-lesson-dur').value)||45, totalLessons: parseInt(document.getElementById('cfg-total-lessons').value)||7, breaks: breaksArr, prayerAfter: parseInt(document.getElementById('cfg-prayer-after').value)||0, prayerDur: parseInt(document.getElementById('cfg-prayer-dur').value)||0, enableTable: document.getElementById('cfg-enable-table').checked, eduLogo: schoolConfig.eduLogo, schoolLogo: schoolConfig.schoolLogo, timeOffsetMs: offset };
+            
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ config: config, classes: classesList, timetable: fullTimetable })); alert("تم الحفظ بنجاح!"); location.reload(); } catch (e) { alert("الذاكرة ممتلئة!"); }
         }
 
-        function factoryReset() { if(confirm("تحذير: سيتم مسح جميع الإعدادات والجداول! متأكد؟")) { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem('SMART_SCHOOL_V24_DYNAMIC'); location.reload(); } }
-
-        // التصدير المشفر الذكي
-        function exportConfig() {
-            const data = localStorage.getItem(STORAGE_KEY);
-            if(!data) return alert("احفظ أولاً!");
-            const c = JSON.parse(data).config;
-            const minConfig = { t: c.startTime, a: c.assemblyDur, l: c.lessonDur, n: c.totalLessons, b: c.breaks, pa: c.prayerAfter, pd: c.prayerDur };
-            const code = btoa(encodeURIComponent(JSON.stringify(minConfig))); // تشفير آمن للنقل
-            prompt("انسخ هذا الكود المشفّر (يتضمن كافة إعدادات أوقات الفسح):", code);
-        }
-
-        // الاستيراد المشفر الذكي
-        function importConfig() {
-            const code = prompt("أدخل الكود المشفّر هنا:");
-            if(!code) return;
-            try {
-                const parsed = JSON.parse(decodeURIComponent(atob(code)));
-                document.getElementById('cfg-start').value = parsed.t;
-                document.getElementById('cfg-assembly-dur').value = parsed.a;
-                document.getElementById('cfg-lesson-dur').value = parsed.l;
-                document.getElementById('cfg-total-lessons').value = parsed.n;
-                document.getElementById('cfg-prayer-after').value = parsed.pa;
-                document.getElementById('cfg-prayer-dur').value = parsed.pd;
-                
-                schoolConfig.breaks = parsed.b || [];
-                document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length;
-                renderDynamicBreaksUI(); 
-
-                alert("تم استيراد الأوقات بنجاح! اضغط (حفظ الإعدادات) لتفعيلها.");
-            } catch(e) { alert("عذراً، الكود غير صحيح أو تالف!"); }
-        }
+        function factoryReset() { if(confirm("مسح كل شيء؟")) { localStorage.clear(); location.reload(); } }
 
         function openEditor() { document.getElementById('settings-container').classList.add('hidden'); document.getElementById('schedule-editor-modal').classList.remove('hidden'); renderEditorTable(); }
-        function closeEditor() { 
-            saveEditorData(); 
-            document.getElementById('schedule-editor-modal').classList.add('hidden'); 
-            document.getElementById('settings-container').classList.remove('hidden'); 
-            renderBreakCheckboxes(); 
-        }
-
-        function addClass() {
-            let name = document.getElementById('new-class-name').value.trim(); if(!name) return;
-            if(!classesList.includes(name)) { classesList.push(name); let totalL = parseInt(document.getElementById('cfg-total-lessons').value) || 7; for(let d=0; d<5; d++) { fullTimetable[d][name] = new Array(totalL).fill(""); } }
-            document.getElementById('new-class-name').value = ""; renderEditorTable();
-        }
-
-        function removeClass(name) { if(confirm(`هل تريد حذف ${name}؟`)){ classesList = classesList.filter(c => c !== name); for(let d=0; d<5; d++) { delete fullTimetable[d][name]; } renderEditorTable(); } }
-
-        function saveEditorData() {
-            let dayIdx = document.getElementById('editor-day-select').value; let totalL = parseInt(document.getElementById('cfg-total-lessons').value) || 7;
-            classesList.forEach(cls => {
-                if(!fullTimetable[dayIdx][cls]) fullTimetable[dayIdx][cls] = new Array(totalL).fill("");
-                for(let p=0; p<totalL; p++) { let input = document.getElementById(`in_${dayIdx}_${cls}_${p}`); if(input) fullTimetable[dayIdx][cls][p] = input.value.trim(); }
-            });
-        }
-
-        function renderEditorTable() {
-            let dayIdx = document.getElementById('editor-day-select').value; let totalL = parseInt(document.getElementById('cfg-total-lessons').value) || 7;
-            let thead = `<th>اسم الفصل</th>`; for(let i=1; i<=totalL; i++) { thead += `<th>الحصة ${ordinals[i]}</th>`; } thead += `<th>حذف</th>`;
-            document.getElementById('editor-thead').innerHTML = thead;
-            let tbody = "";
-            classesList.forEach(cls => {
-                let row = `<tr><td style="font-weight:bold; color:var(--primary);">${cls}</td>`;
-                let periods = fullTimetable[dayIdx][cls] || new Array(totalL).fill("");
-                for(let p=0; p<totalL; p++) { let val = periods[p] || ""; row += `<td><input type="text" id="in_${dayIdx}_${cls}_${p}" value="${val}" placeholder="مادة - معلم" onchange="saveEditorData()"></td>`; }
-                row += `<td><button class="btn btn-danger" style="padding: 5px 10px;" onclick="removeClass('${cls}')">X</button></td></tr>`; tbody += row;
-            });
-            document.getElementById('editor-tbody').innerHTML = tbody;
-        }
-
-        function openSettings() {
-            if (document.fullscreenElement) document.exitFullscreen().catch(err => console.log(err));
-            document.getElementById('main-app').classList.add('hidden'); document.getElementById('start-overlay').classList.add('hidden'); document.getElementById('settings-container').classList.remove('hidden'); populateSettingsForm();
-        }
+        function closeEditor() { saveEditorData(); document.getElementById('schedule-editor-modal').classList.add('hidden'); document.getElementById('settings-container').classList.remove('hidden'); renderDynamicBreaksUI(); }
+        function addClass() { let name = document.getElementById('new-class-name').value.trim(); if(name && !classesList.includes(name)) { classesList.push(name); for(let d=0; d<5; d++) fullTimetable[d][name] = new Array(8).fill(""); renderEditorTable(); document.getElementById('new-class-name').value="";} }
+        function removeClass(name) { if(confirm(`حذف ${name}؟`)){ classesList = classesList.filter(c => c !== name); for(let d=0; d<5; d++) delete fullTimetable[d][name]; renderEditorTable(); } }
+        function saveEditorData() { let dayIdx = document.getElementById('editor-day-select').value; let totalL = parseInt(document.getElementById('cfg-total-lessons').value) || 7; classesList.forEach(cls => { if(!fullTimetable[dayIdx][cls]) fullTimetable[dayIdx][cls] = new Array(totalL).fill(""); for(let p=0; p<totalL; p++) { let input = document.getElementById(`in_${dayIdx}_${cls}_${p}`); if(input) fullTimetable[dayIdx][cls][p] = input.value.trim(); } }); }
+        function renderEditorTable() { let dayIdx = document.getElementById('editor-day-select').value; let totalL = parseInt(document.getElementById('cfg-total-lessons').value) || 7; let thead = `<th>الفصل</th>`; for(let i=1; i<=totalL; i++) thead += `<th>الحصة ${ordinals[i]}</th>`; document.getElementById('editor-thead').innerHTML = thead + `<th>حذف</th>`; let tbody = ""; classesList.forEach(cls => { let row = `<tr><td style="color:var(--primary); font-weight:bold;">${cls}</td>`; let periods = fullTimetable[dayIdx][cls] || new Array(totalL).fill(""); for(let p=0; p<totalL; p++) { row += `<td><input type="text" id="in_${dayIdx}_${cls}_${p}" value="${periods[p]||""}" onchange="saveEditorData()"></td>`; } tbody += row + `<td><button class="btn btn-danger" onclick="removeClass('${cls}')">X</button></td></tr>`; }); document.getElementById('editor-tbody').innerHTML = tbody; }
+        function openSettings() { if (document.fullscreenElement) document.exitFullscreen(); document.getElementById('main-app').classList.add('hidden'); document.getElementById('start-overlay').classList.add('hidden'); document.getElementById('settings-container').classList.remove('hidden'); populateSettingsForm(); }
 
         function timeToMinutes(timeStr) { const [hrs, mins] = timeStr.split(':').map(Number); return (hrs * 60) + mins; }
-        function formatTime(mins) { let h = Math.floor(mins / 60) % 24; let m = mins % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`; }
+        function formatTime(mins) { let h = Math.floor(mins / 60) % 24, m = mins % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`; }
 
         function generateSchedule() {
-            dynamicSchedule = [];
-            let current = timeToMinutes(schoolConfig.startTime);
-            let lessonCounter = 0; 
-
-            if (schoolConfig.assemblyDur > 0) {
-                dynamicSchedule.push({ name: "الطابور الصباحي", start: current, end: current + schoolConfig.assemblyDur, startSecs: current * 60, endSecs: (current + schoolConfig.assemblyDur) * 60, type: 'assembly', lessonIdx: -1, isBreak: false });
-                current += schoolConfig.assemblyDur;
-            }
-
+            dynamicSchedule = []; let current = timeToMinutes(schoolConfig.startTime), lessonCounter = 0; 
+            if (schoolConfig.assemblyDur > 0) { dynamicSchedule.push({ name: "الطابور الصباحي", start: current, end: current + schoolConfig.assemblyDur, startSecs: current * 60, endSecs: (current + schoolConfig.assemblyDur) * 60, type: 'assembly', lessonIdx: -1, isBreak: false }); current += schoolConfig.assemblyDur; }
             for (let i = 1; i <= schoolConfig.totalLessons; i++) {
-                dynamicSchedule.push({ name: "الحصة " + ordinals[i], start: current, end: current + schoolConfig.lessonDur, startSecs: current * 60, endSecs: (current + schoolConfig.lessonDur) * 60, type: 'lesson', lessonIdx: lessonCounter, isBreak: false });
-                current += schoolConfig.lessonDur;
-                lessonCounter++;
-
-                if (schoolConfig.breaks && schoolConfig.breaks.length > 0) {
-                    schoolConfig.breaks.forEach((brk, idx) => {
-                        if (brk.after === i && brk.duration > 0) {
-                            dynamicSchedule.push({ 
-                                name: "الفسحة " + ordinals[idx+1], 
-                                start: current, end: current + brk.duration, 
-                                startSecs: current * 60, endSecs: (current + brk.duration) * 60, 
-                                type: 'break', lessonIdx: -1, isBreak: true, breakIndex: idx 
-                            });
-                            current += brk.duration;
-                        }
-                    });
-                }
-
-                if (schoolConfig.prayerAfter === i && schoolConfig.prayerDur > 0) {
-                    dynamicSchedule.push({ name: "صلاة الظهر", start: current, end: current + schoolConfig.prayerDur, startSecs: current * 60, endSecs: (current + schoolConfig.prayerDur) * 60, type: 'prayer', lessonIdx: -1, isBreak: false });
-                    current += schoolConfig.prayerDur;
-                }
+                dynamicSchedule.push({ name: "الحصة " + ordinals[i], start: current, end: current + schoolConfig.lessonDur, startSecs: current * 60, endSecs: (current + schoolConfig.lessonDur) * 60, type: 'lesson', lessonIdx: lessonCounter, isBreak: false }); current += schoolConfig.lessonDur; lessonCounter++;
+                if (schoolConfig.breaks) { schoolConfig.breaks.forEach((brk, idx) => { if (brk.after === i && brk.duration > 0) { dynamicSchedule.push({ name: "الفسحة " + ordinals[idx+1], start: current, end: current + brk.duration, startSecs: current * 60, endSecs: (current + brk.duration) * 60, type: 'break', lessonIdx: -1, isBreak: true, breakIndex: idx }); current += brk.duration; } }); }
+                if (schoolConfig.prayerAfter === i && schoolConfig.prayerDur > 0) { dynamicSchedule.push({ name: "صلاة الظهر", start: current, end: current + schoolConfig.prayerDur, startSecs: current * 60, endSecs: (current + schoolConfig.prayerDur) * 60, type: 'prayer', lessonIdx: -1, isBreak: false }); current += schoolConfig.prayerDur; }
             }
-            
             dynamicSchedule.sort((a, b) => a.start - b.start);
-            renderSidebar(); applyLogosToHeader(); 
-            
-            if(schoolConfig.enableTable) { document.getElementById('live-grid-container').style.display = 'flex'; } 
-            else { document.getElementById('live-grid-container').style.display = 'none'; }
-            
-            let title = schoolConfig.principalTitle || "إدارة";
-            document.getElementById('display-principal-name').innerText = schoolConfig.principalName ? `${title}: ${schoolConfig.principalName}` : "";
-        }
-
-        function renderSidebar() {
             document.getElementById('display-school-name').innerText = schoolConfig.schoolName;
             if (schoolConfig.newsTicker) { document.getElementById('news-container').style.display = 'flex'; document.getElementById('display-news').innerText = " ★ " + schoolConfig.newsTicker + " ★ "; } else { document.getElementById('news-container').style.display = 'none'; }
             const container = document.getElementById('schedule-list'); container.innerHTML = '';
-            dynamicSchedule.forEach((item, index) => {
-                const div = document.createElement('div'); div.className = `schedule-item ${item.type}-item`; div.id = `item-${index}`;
-                div.innerHTML = `<span>${item.name}</span> <span style="font-family: monospace;">${formatTime(item.start)} - ${formatTime(item.end)}</span>`;
-                container.appendChild(div);
-            });
+            dynamicSchedule.forEach((item, index) => { container.innerHTML += `<div class="schedule-item ${item.type}-item" id="item-${index}"><span>${item.name}</span> <span style="font-family: monospace;">${formatTime(item.start)} - ${formatTime(item.end)}</span></div>`; });
+            applyLogosToHeader(); 
+            document.getElementById('live-grid-container').style.display = schoolConfig.enableTable ? 'flex' : 'none';
+            document.getElementById('display-principal-name').innerText = schoolConfig.principalName ? `${schoolConfig.principalTitle||"إدارة"}: ${schoolConfig.principalName}` : "";
         }
 
-        function playChime() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            function beep(freq, delay, dur) {
-                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.type = 'sine'; osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.5, audioCtx.currentTime + delay);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + delay + dur);
-                osc.start(audioCtx.currentTime + delay); osc.stop(audioCtx.currentTime + delay + dur);
-            }
-            beep(659.25, 0, 1); beep(523.25, 0.4, 1.5);
+        // الحصول على الوقت المصحح
+        function getCorrectedDate() {
+            let realNow = new Date().getTime();
+            let offset = schoolConfig.timeOffsetMs || 0;
+            return new Date(realNow + offset);
         }
-
-        function announce(text) { playChime(); setTimeout(() => { let utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'ar-SA'; utterance.rate = 0.9; window.speechSynthesis.speak(utterance); }, 1200); }
 
         function startSystem() {
-            let elem = document.documentElement; if (elem.requestFullscreen) { elem.requestFullscreen().catch(err => console.log(err)); } else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+            let elem = document.documentElement; if (elem.requestFullscreen) elem.requestFullscreen();
             document.getElementById('start-overlay').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden'); systemActive = true;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            let utterance = new SpeechSynthesisUtterance("بسم الله، بدأ تشغيل النظام"); utterance.lang = 'ar-SA'; window.speechSynthesis.speak(utterance);
             generateDates(); update(); setInterval(update, 1000);
         }
 
         function generateDates() {
-            const now = new Date(); const hijriOpts = { calendar: 'islamic-umalqura', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' }; const gregOpts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' };
-            document.getElementById('hijri-date').innerHTML = `<span>الهجري:</span> ${new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', hijriOpts).format(now)}`; document.getElementById('greg-date').innerHTML = `<span>الميلادي:</span> ${new Intl.DateTimeFormat('ar-SA', gregOpts).format(now)}`;
+            const now = getCorrectedDate(); 
+            const hijriOpts = { calendar: 'islamic-umalqura', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }; 
+            const gregOpts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('hijri-date').innerHTML = `<span>الهجري:</span> ${new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', hijriOpts).format(now)}`; 
+            document.getElementById('greg-date').innerHTML = `<span>الميلادي:</span> ${new Intl.DateTimeFormat('ar-SA', gregOpts).format(now)}`;
         }
 
-        function updateLiveGrid(activeItem, nextLessonOverride) {
+        function updateLiveGrid(activeItem, nextLessonOverride, now) {
             if(!schoolConfig.enableTable) return;
-            const grid = document.getElementById('classes-grid');
-            const title = document.getElementById('live-grid-title');
+            const grid = document.getElementById('classes-grid'), title = document.getElementById('live-grid-title');
+            if (activeItem.type === 'assembly') { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">الطابور الصباحي</div>`; title.innerText = `البرنامج الصباحي`; return; }
+            if (activeItem.type === 'prayer') { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--prayer);font-size:2vw;padding-top:2vh;">تقام الصلاة الآن</div>`; title.innerText = `وقت الصلاة`; return; }
 
-            if (activeItem.type === 'assembly') {
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2.5vw; padding-top: 2vh;">☀️ الطابور الصباحي جاري الآن</div>`;
-                title.innerText = `البرنامج الصباحي`; return;
-            }
-            if (activeItem.type === 'prayer') {
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--prayer); font-size: 2.5vw; padding-top: 2vh;">🕌 تقام الصلاة الآن.. تقبل الله طاعتكم</div>`;
-                title.innerText = `وقت الصلاة`; return;
-            }
+            let displayIdx = activeItem.lessonIdx, isBreak = activeItem.isBreak; 
+            if (isBreak) { if (nextLessonOverride) displayIdx = nextLessonOverride.lessonIdx; else { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">انتهاء الحصص</div>`; title.innerText = `نهاية اليوم`; return; } }
 
-            let displayIdx = activeItem.lessonIdx;
-            let isBreak = activeItem.isBreak; 
-            
-            if (isBreak) {
-                if (nextLessonOverride) {
-                    displayIdx = nextLessonOverride.lessonIdx;
-                } else {
-                    grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2.5vw; padding-top: 2vh;">انتهاء الحصص 🎒</div>`;
-                    title.innerText = `نهاية اليوم الدراسي`; return;
-                }
-            }
+            let dayIdx = {0:0,1:1,2:2,3:3,4:4}[now.getDay()];
+            if(dayIdx === undefined) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">عطلة نهاية الأسبوع</div>`; title.innerText = `عطلة`; return; } 
 
-            let today = new Date().getDay();
-            let saudiDayMap = { 0:0, 1:1, 2:2, 3:3, 4:4 }; 
-            let dayIdx = saudiDayMap[today];
-            
-            if(dayIdx === undefined) { 
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2.5vw; padding-top: 2vh;">عطلة نهاية الأسبوع</div>`;
-                title.innerText = `عطلة سعيدة`; return; 
-            } 
-
-            let breakClassesArray = [];
-            if(isBreak && schoolConfig.breaks && schoolConfig.breaks[activeItem.breakIndex]) {
-                breakClassesArray = schoolConfig.breaks[activeItem.breakIndex].classes || [];
-            }
-
-            let html = "";
-            let count = 0;
+            let breakClassesArray = (isBreak && schoolConfig.breaks[activeItem.breakIndex]) ? schoolConfig.breaks[activeItem.breakIndex].classes || [] : [];
+            let html = "", count = 0;
             classesList.forEach(cls => {
                 let pList = fullTimetable[dayIdx][cls];
                 if(pList && pList[displayIdx] && pList[displayIdx].trim() !== "") {
-                    count++;
-                    let isThisClassOnBreak = isBreak && breakClassesArray.includes(cls);
-                    
-                    if(isThisClassOnBreak) {
-                        html += `<div class="class-card in-break"><div class="c-name">${cls}</div><div class="c-subject">🍔 وقت الفسحة</div></div>`;
-                    } else {
-                        html += `<div class="class-card"><div class="c-name">${cls}</div><div class="c-subject">${pList[displayIdx]}</div></div>`;
-                    }
+                    count++; let inBreak = isBreak && breakClassesArray.includes(cls);
+                    html += inBreak ? `<div class="class-card in-break"><div class="c-name">${cls}</div><div class="c-subject">🍔 وقت الفسحة</div></div>` : `<div class="class-card"><div class="c-name">${cls}</div><div class="c-subject">${pList[displayIdx]}</div></div>`;
                 }
             });
 
-            if(count === 0) { 
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2vw; padding-top: 2vh;">لا يوجد بيانات مدخلة لهذه الحصة في الجدول</div>`;
-                title.innerText = `جدول الفصول`; return; 
-            }
-            
-            let titleText = `جدول الفصول`;
-            if(isBreak && nextLessonOverride) titleText += ` - ${nextLessonOverride.name} (مستمرة)`;
-            else titleText += ` - ${activeItem.name}`;
-            
-            title.innerText = titleText;
-            grid.innerHTML = html;
+            if(count === 0) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:1.5vw;padding-top:2vh;">لا يوجد بيانات بالجدول</div>`; title.innerText = `جدول الفصول`; return; }
+            title.innerText = isBreak && nextLessonOverride ? `جدول الفصول - ${nextLessonOverride.name} (مستمرة)` : `جدول الفصول - ${activeItem.name}`; grid.innerHTML = html;
         }
 
         function update() {
             if (!systemActive) return;
-            const now = new Date();
-            const totalSecs = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
+            const now = getCorrectedDate(); // استخدام الوقت المصحح دائماً
+            
+            // تحديث ساعة العقارب
+            let hh = now.getHours(), mm = now.getMinutes(), ss = now.getSeconds();
+            document.getElementById('hr-hand').style.transform = `rotateZ(${(hh * 30) + (mm * 0.5)}deg)`;
+            document.getElementById('mn-hand').style.transform = `rotateZ(${mm * 6}deg)`;
+            document.getElementById('sc-hand').style.transform = `rotateZ(${ss * 6}deg)`;
+
             document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', {hour12: false});
+            const totalSecs = (hh * 3600) + (mm * 60) + ss;
 
-            if (now.getDay() === 5 || now.getDay() === 6) {
-                document.getElementById('main-period').innerText = "عطلة نهاية الأسبوع"; document.getElementById('live-grid-container').style.display = 'none'; return;
-            } else { if(schoolConfig.enableTable) document.getElementById('live-grid-container').style.display = 'flex'; }
+            if (now.getDay() === 5 || now.getDay() === 6) { document.getElementById('main-period').innerText = "عطلة نهاية الأسبوع"; document.getElementById('live-grid-container').style.display = 'none'; return; } else { if(schoolConfig.enableTable) document.getElementById('live-grid-container').style.display = 'flex'; }
 
-            let activeItem = null;
-            let nextLesson = null;
-
+            let activeItem = null, nextLesson = null;
             dynamicSchedule.forEach((item, index) => {
-                if (totalSecs >= item.startSecs && totalSecs < item.endSecs) {
-                    activeItem = item;
-                    document.getElementById(`item-${index}`).classList.add('active');
-                } else {
-                    document.getElementById(`item-${index}`).classList.remove('active');
-                    if (totalSecs >= item.endSecs) document.getElementById(`item-${index}`).classList.add('passed');
-                }
+                if (totalSecs >= item.startSecs && totalSecs < item.endSecs) { activeItem = item; document.getElementById(`item-${index}`).classList.add('active'); } 
+                else { document.getElementById(`item-${index}`).classList.remove('active'); if (totalSecs >= item.endSecs) document.getElementById(`item-${index}`).classList.add('passed'); }
             });
-
-            const breakAlertBar = document.getElementById('break-alert-bar');
 
             if (activeItem) {
                 let displayItem = activeItem;
-                
                 if (activeItem.isBreak) {
                     nextLesson = dynamicSchedule.find(s => s.startSecs >= activeItem.endSecs && s.type === 'lesson');
-                    if (nextLesson) {
-                        displayItem = {
-                            name: nextLesson.name,
-                            startSecs: activeItem.startSecs, 
-                            endSecs: nextLesson.endSecs,     
-                            type: 'lesson',
-                            lessonIdx: nextLesson.lessonIdx
-                        };
-                    }
+                    if (nextLesson) displayItem = { name: nextLesson.name, startSecs: activeItem.startSecs, endSecs: nextLesson.endSecs, type: 'lesson', lessonIdx: nextLesson.lessonIdx };
                 }
 
                 document.getElementById('main-period').innerText = displayItem.name;
-                updateLiveGrid(activeItem, nextLesson);
+                updateLiveGrid(activeItem, nextLesson, now);
 
-                let totalDur = displayItem.endSecs - displayItem.startSecs;
-                let elapsed = totalSecs - displayItem.startSecs;
-                let remain = displayItem.endSecs - totalSecs;
-
-                document.getElementById('progress-bar').style.width = `${(elapsed / totalDur) * 100}%`;
-                document.getElementById('progress-percent').innerText = `${Math.floor((elapsed / totalDur) * 100)}%`;
+                let totalDur = displayItem.endSecs - displayItem.startSecs, elapsed = totalSecs - displayItem.startSecs, remain = displayItem.endSecs - totalSecs;
+                document.getElementById('progress-bar').style.width = `${(elapsed / totalDur) * 100}%`; document.getElementById('progress-percent').innerText = `${Math.floor((elapsed / totalDur) * 100)}%`;
                 document.getElementById('elapsed-time').innerText = `مضى: ${String(Math.floor(elapsed / 60)).padStart(2, '0')}:${String(elapsed % 60).padStart(2, '0')}`;
                 document.getElementById('main-timer').innerText = `${String(Math.floor(remain / 60)).padStart(2, '0')}:${String(remain % 60).padStart(2, '0')}`;
 
-                if (activeItem.isBreak) {
-                    let breakRemain = activeItem.endSecs - totalSecs;
-                    document.getElementById('break-alert-title').innerText = `🔔 ${activeItem.name} جارية الآن للفصول المحددة`;
-                    document.getElementById('break-alert-timer').innerText = `متبقي للفسحة: ${String(Math.floor(breakRemain / 60)).padStart(2, '0')}:${String(breakRemain % 60).padStart(2, '0')}`;
-                    breakAlertBar.classList.remove('hidden');
-                } else {
-                    breakAlertBar.classList.add('hidden');
-                }
-
-                if (elapsed >= 0 && elapsed <= 2 && announcedStart !== activeItem.name) { announce(`بدأ الآن موعد ${activeItem.name}`); announcedStart = activeItem.name; }
-                if (remain <= 1 && remain >= 0 && announcedEnd !== activeItem.name) { announce(`انتهى وقت ${activeItem.name}`); announcedEnd = activeItem.name; }
-
+                if (activeItem.isBreak) { document.getElementById('break-alert-title').innerText = `🔔 ${activeItem.name} جارية الآن`; document.getElementById('break-alert-timer').innerText = `متبقي: ${String(Math.floor((activeItem.endSecs - totalSecs) / 60)).padStart(2, '0')}:${String((activeItem.endSecs - totalSecs) % 60).padStart(2, '0')}`; document.getElementById('break-alert-bar').classList.remove('hidden'); } 
+                else document.getElementById('break-alert-bar').classList.add('hidden');
             } else {
-                document.getElementById('main-period').innerText = "خارج الدوام";
-                document.getElementById('progress-bar').style.width = "0%"; document.getElementById('progress-percent').innerText = "0%"; document.getElementById('main-timer').innerText = "--:--";
-                breakAlertBar.classList.add('hidden');
+                document.getElementById('main-period').innerText = "خارج الدوام"; document.getElementById('progress-bar').style.width = "0%"; document.getElementById('progress-percent').innerText = "0%"; document.getElementById('main-timer').innerText = "--:--"; document.getElementById('break-alert-bar').classList.add('hidden');
                 if(schoolConfig.enableTable) { document.getElementById('classes-grid').innerHTML = ""; document.getElementById('live-grid-title').innerText = "جدول الفصول"; }
             }
-            if(now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) generateDates();
+            if(hh === 0 && mm === 0 && ss === 0) generateDates();
         }
     </script>
 </body>
