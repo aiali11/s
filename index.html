@@ -3,17 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية V24 (الفسح الديناميكية)</title>
+    <title>نظام الإدارة المدرسية V25 (الوضع الفاتح/الداكن)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* إعدادات الألوان (الوضع الداكن الافتراضي) */
         :root {
-            --bg-color: #0f172a; --card-bg: #1e293b; --primary: #38bdf8;
-            --accent: #fbbf24; --danger: #ef4444; --success: #22c55e;
-            --prayer: #ffd700; --text: #f8fafc; --break-color: #10b981;
+            --bg-color: #0f172a; 
+            --card-bg: #1e293b; 
+            --primary: #38bdf8;
+            --accent: #fbbf24; 
+            --danger: #ef4444; 
+            --success: #22c55e;
+            --prayer: #ffd700; 
+            --text: #f8fafc; 
+            --text-muted: #cbd5e1;
+            --break-color: #10b981;
+            --border-color: rgba(255,255,255,0.1);
+            --header-bg: rgba(30, 41, 59, 0.9);
+            --item-bg: rgba(0,0,0,0.2);
+            --progress-bg: #334155;
+            --class-card-bg: #0f172a;
+            --ticker-bg: #1e293b;
+            --input-bg: #0f172a;
+            --input-border: #334155;
+            --modal-bg: rgba(15, 23, 42, 0.98);
+        }
+
+        /* إعدادات الألوان (الوضع الفاتح) */
+        body.light-mode {
+            --bg-color: #f1f5f9; 
+            --card-bg: #ffffff; 
+            --primary: #0284c7; /* أزرق أغمق للوضوح */
+            --accent: #d97706; /* برتقالي أغمق */
+            --danger: #dc2626; 
+            --success: #16a34a;
+            --prayer: #b45309; 
+            --text: #0f172a; 
+            --text-muted: #475569;
+            --break-color: #059669;
+            --border-color: #e2e8f0;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --item-bg: #f8fafc;
+            --progress-bg: #e2e8f0;
+            --class-card-bg: #f8fafc;
+            --ticker-bg: #f8fafc;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --modal-bg: rgba(241, 245, 249, 0.98);
         }
 
         ::-webkit-scrollbar { display: none; width: 0; height: 0; }
-        * { scrollbar-width: none; -ms-overflow-style: none; }
+        * { 
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; /* حركة ناعمة للتغير */
+        }
 
         body { background-color: var(--bg-color); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden; box-sizing: border-box; }
         .hidden { display: none !important; }
@@ -25,99 +69,104 @@
         
         .form-row { display: flex; gap: 15px; margin-bottom: 12px; }
         .form-group { flex: 1; margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: #cbd5e1; font-size: 14px;}
-        input[type="text"], input[type="number"], input[type="time"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--text-muted); font-size: 14px;}
+        input[type="text"], input[type="number"], input[type="time"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
         input:focus, select:focus { outline: none; border-color: var(--primary); }
         .section-title { border-bottom: 1px solid var(--primary); color: var(--accent); margin: 15px 0 10px 0; padding-bottom: 5px; font-weight: bold; font-size: 16px; }
         
-        .btn { background: var(--primary); color: var(--bg-color); border: none; padding: 10px 15px; border-radius: 8px; font-size: 16px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
+        .btn { background: var(--primary); color: #ffffff; border: none; padding: 10px 15px; border-radius: 8px; font-size: 16px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
         .btn-success { background: var(--success); color: white; padding: 15px; width: 100%; margin-top: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); font-size: 18px;}
         .btn-danger { background: var(--danger); color: white; }
 
-        .checkbox-grid { display: flex; flex-wrap: wrap; gap: 8px; background: rgba(0,0,0,0.15); padding: 10px; border-radius: 8px; min-height: 42px; align-items: center;}
-        .checkbox-item { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 6px 12px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; color: #e2e8f0;}
+        .checkbox-grid { display: flex; flex-wrap: wrap; gap: 8px; background: var(--item-bg); padding: 10px; border-radius: 8px; min-height: 42px; align-items: center;}
+        .checkbox-item { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 6px 12px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; color: var(--text);}
         .checkbox-item:hover { background: rgba(56, 189, 248, 0.2); }
         .checkbox-item input { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--primary); }
         .empty-classes-msg { color: var(--danger); font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
 
-        .break-config-box { background: rgba(0,0,0,0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed rgba(56, 189, 248, 0.3); }
+        .break-config-box { background: var(--item-bg); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed rgba(56, 189, 248, 0.3); }
 
         /* محرر الجدول */
-        #schedule-editor-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 10001; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        #schedule-editor-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 10001; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
         .editor-controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; background: var(--card-bg); padding: 15px; border-radius: 10px;}
         .table-wrapper { overflow-x: auto; background: var(--card-bg); border-radius: 10px; padding: 10px; }
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th, td { border: 1px solid #334155; padding: 8px; text-align: center; }
-        th { background: #0f172a; color: var(--accent); }
-        td input[type="text"] { padding: 5px; border: none; border-radius: 4px; background: rgba(255,255,255,0.05); text-align: center; font-size: 13px; color: white; width: 90%; font-family: 'Cairo';}
+        th, td { border: 1px solid var(--input-border); padding: 8px; text-align: center; color: var(--text); }
+        th { background: var(--bg-color); color: var(--accent); }
+        td input[type="text"] { padding: 5px; border: none; border-radius: 4px; background: var(--item-bg); text-align: center; font-size: 13px; width: 90%; font-family: 'Cairo';}
         td input[type="text"]:focus { background: rgba(56, 189, 248, 0.2); }
 
         /* التفعيل */
-        #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
-        #start-btn { background: var(--primary); color: var(--bg-color); border: none; padding: 20px 50px; border-radius: 15px; font-size: 3vw; font-family: 'Cairo'; font-weight: bold; cursor: pointer; }
+        #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
+        #start-btn { background: var(--primary); color: #ffffff; border: none; padding: 20px 50px; border-radius: 15px; font-size: 3vw; font-family: 'Cairo'; font-weight: bold; cursor: pointer; }
 
         /* النظام الرئيسي */
         #main-app { display: flex; flex-direction: column; height: 100%; width: 100%; padding: 0.5vh 1vw; box-sizing: border-box; }
         
-        header { position: relative; flex-shrink: 0; padding: 1vh; background: rgba(30, 41, 59, 0.9); border-bottom: 2px solid var(--primary); display: flex; flex-direction: column; align-items: center; gap: 3px; border-radius: 10px 10px 0 0; padding-right: 90px; padding-left: 90px; }
+        header { position: relative; flex-shrink: 0; padding: 1vh; background: var(--header-bg); border-bottom: 2px solid var(--primary); display: flex; flex-direction: column; align-items: center; gap: 3px; border-radius: 10px 10px 0 0; padding-right: 90px; padding-left: 90px; }
         .logo-right { position: absolute; top: 50%; transform: translateY(-50%); right: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; }
-        .logo-left { position: absolute; top: 50%; transform: translateY(-50%); left: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; }
-        .education-logo-img { max-height: 100%; width: auto; object-fit: contain; background-color: rgba(255, 255, 255, 0.9); padding: 5px 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .logo-left { position: absolute; top: 50%; transform: translateY(-50%); left: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; gap: 10px;}
+        .education-logo-img { max-height: 100%; width: auto; object-fit: contain; background-color: rgba(255, 255, 255, 0.9); padding: 5px 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-        .school-info h1 { margin: 0; font-size: 2.2vw; color: var(--accent); font-weight: 900; }
-        .current-time { font-size: 4vw; font-weight: bold; color: #ffffff; letter-spacing: 2px; }
-        .dates-container { display: flex; justify-content: center; gap: 30px; background: rgba(0,0,0,0.3); padding: 4px 20px; border-radius: 12px; font-size: 0.9vw; color: #cbd5e1; }
+        /* زر التحويل في الهيدر */
+        .btn-theme-toggle { background: var(--bg-color); color: var(--text); border: 2px solid var(--primary); padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 1vw; font-family: 'Cairo'; font-weight: bold; display: flex; align-items: center; gap: 5px;}
+        .btn-theme-toggle:hover { background: var(--primary); color: #ffffff; }
+
+        .school-info h1 { margin: 0; font-size: 2.2vw; color: var(--accent); font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
+        .current-time { font-size: 4vw; font-weight: bold; color: var(--text); letter-spacing: 2px; }
+        .dates-container { display: flex; justify-content: center; gap: 30px; background: var(--item-bg); padding: 4px 20px; border-radius: 12px; font-size: 0.9vw; color: var(--text-muted); font-weight: bold;}
 
         .main-body { display: flex; flex: 1; padding: 1vh 0; gap: 15px; box-sizing: border-box; min-height: 0; overflow: hidden; }
         
-        .schedule-sidebar { width: 25%; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overflow-x: hidden; }
-        .schedule-item { background: rgba(0,0,0,0.2); padding: 0.8vh 1vw; border-radius: 8px; display: flex; justify-content: space-between; font-size: 0.95vw; color: #cbd5e1; transition: 0.3s; }
-        .schedule-item.active { background: var(--primary); color: var(--bg-color); font-weight: bold; border: 2px solid #ffffff; transform: scale(1.02);}
+        .schedule-sidebar { width: 25%; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overflow-x: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
+        .schedule-title { text-align: center; color: var(--primary); font-weight: bold; margin-bottom: 10px; font-size: 1.2vw; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;}
+        .schedule-item { background: var(--item-bg); padding: 0.8vh 1vw; border-radius: 8px; display: flex; justify-content: space-between; font-size: 0.95vw; color: var(--text-muted); transition: 0.3s; font-weight: bold;}
+        .schedule-item.active { background: var(--primary); color: #ffffff; border: 2px solid var(--bg-color); transform: scale(1.02); box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);}
         .schedule-item.passed { opacity: 0.4; text-decoration: line-through; }
         .schedule-item.break-item { color: var(--success); }
+        body.light-mode .schedule-item.break-item { color: var(--break-color); }
         .schedule-item.prayer-item { color: var(--prayer); border: 1px dashed var(--prayer);}
 
         .main-content { width: 75%; display: flex; flex-direction: column; gap: 10px; overflow: hidden;}
         
-        .status-card { background: var(--card-bg); border-radius: 15px; padding: 1.5vh 3vw; text-align: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.3); flex-shrink: 0; display: flex; flex-direction: column; justify-content: center;}
-        .period-now { font-size: 3.5vw; font-weight: 900; color: var(--primary); margin-bottom: 0.5vh; transition: 0.3s; }
-        .progress-wrapper { width: 100%; height: 1.5vh; background-color: #334155; border-radius: 20px; overflow: hidden; margin: 1vh 0; }
+        .status-card { background: var(--card-bg); border-radius: 15px; padding: 1.5vh 3vw; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; flex-direction: column; justify-content: center;}
+        .period-now { font-size: 3.5vw; font-weight: 900; color: var(--primary); margin-bottom: 0.5vh; transition: 0.3s; text-shadow: 1px 1px 2px rgba(0,0,0,0.05);}
+        .progress-wrapper { width: 100%; height: 1.5vh; background-color: var(--progress-bg); border-radius: 20px; overflow: hidden; margin: 1vh 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);}
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--success), var(--primary)); width: 0%; transition: width 1s linear; }
-        .progress-stats { display: flex; justify-content: space-between; font-size: 1.1vw; color: #94a3b8; font-weight: bold;}
+        .progress-stats { display: flex; justify-content: space-between; font-size: 1.1vw; color: var(--text-muted); font-weight: bold;}
         .timer { font-size: 4.5vw; color: var(--danger); font-weight: 900; line-height: 1; letter-spacing: 3px; }
 
-        .break-alert-bar { background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4), rgba(16, 185, 129, 0.2)); border: 1px solid var(--break-color); border-radius: 10px; padding: 8px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; font-size: 1.5vw; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); } 50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); } 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); } }
+        .break-alert-bar { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.1)); border: 1px solid var(--break-color); border-radius: 10px; padding: 8px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; color: var(--success); font-weight: bold; font-size: 1.5vw; animation: pulse 2s infinite; }
+        body.light-mode .break-alert-bar { color: var(--break-color); background: linear-gradient(90deg, rgba(5, 150, 105, 0.1), rgba(5, 150, 105, 0.2), rgba(5, 150, 105, 0.1));}
+        @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } 50% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); } 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } }
 
-        .live-grid-container { flex: 1; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; overflow: hidden; }
-        .live-grid-title { text-align: center; color: var(--accent); font-size: 1.3vw; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+        .live-grid-container { flex: 1; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
+        .live-grid-title { text-align: center; color: var(--accent); font-size: 1.3vw; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
         
         .classes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16%, 1fr)); gap: 8px; align-content: start; overflow-y: auto;}
-        .class-card { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 1vh 0.5vw; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: flex; flex-direction: column; justify-content: center; transition: 0.3s;}
-        .c-name { font-size: 1.1vw; color: var(--accent); font-weight: 900; margin-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 3px;}
-        .c-subject { font-size: 1vw; color: white; font-weight: bold; line-height: 1.3;}
+        .class-card { background: var(--class-card-bg); border: 1px solid var(--input-border); border-radius: 8px; padding: 1vh 0.5vw; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; transition: 0.3s;}
+        .c-name { font-size: 1.1vw; color: var(--accent); font-weight: 900; margin-bottom: 3px; border-bottom: 1px solid var(--border-color); padding-bottom: 3px;}
+        .c-subject { font-size: 1vw; color: var(--text); font-weight: bold; line-height: 1.3;}
         
-        .class-card.in-break { background: rgba(16, 185, 129, 0.15); border-color: var(--break-color); }
+        .class-card.in-break { background: rgba(16, 185, 129, 0.1); border-color: var(--break-color); }
         .class-card.in-break .c-subject { color: var(--break-color); font-size: 1.1vw; }
 
-        /* تعديل حركة شريط الأخبار من اليسار إلى اليمين بناءً على طلبك */
-        .news-ticker-container { flex-shrink: 0; width: 100%; background: #1e293b; color: var(--accent); overflow: hidden; display: flex; align-items: center; border-top: 1px solid var(--primary); font-size: 1.3vw; font-weight: bold; padding: 0;}
-        .ticker-label { background: var(--primary); color: var(--bg-color); padding: 0.8vh 2vw; z-index: 10; font-weight: 900; }
-        .ticker-wrapper { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 100%; display: flex; align-items: center; direction: ltr; /* فرض اتجاه الحركة */ }
+        .news-ticker-container { flex-shrink: 0; width: 100%; background: var(--ticker-bg); color: var(--accent); overflow: hidden; display: flex; align-items: center; border-top: 1px solid var(--primary); font-size: 1.3vw; font-weight: bold; padding: 0;}
+        .ticker-label { background: var(--primary); color: #ffffff; padding: 0.8vh 2vw; z-index: 10; font-weight: 900; }
+        .ticker-wrapper { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 100%; display: flex; align-items: center; direction: ltr; }
         
-        /* يبدأ من أقصى اليسار وينتهي في أقصى اليمين */
         .ticker-content { display: inline-block; white-space: nowrap; position: absolute; animation: marquee-ltr 35s linear infinite; will-change: transform; left: 0;}
         @keyframes marquee-ltr { 0% { transform: translate3d(-100%, 0, 0); } 100% { transform: translate3d(100vw, 0, 0); } }
 
-        .footer-bar { flex-shrink: 0; background: var(--primary); color: var(--bg-color); font-weight: bold; font-size: 0.9vw; min-height: 3.5vh; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-radius: 0 0 10px 10px;}
+        .footer-bar { flex-shrink: 0; background: var(--primary); color: #ffffff; font-weight: bold; font-size: 0.9vw; min-height: 3.5vh; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-radius: 0 0 10px 10px;}
 
         .logo-upload-section { display: flex; gap: 15px; }
-        .logo-preview-box { flex: 1; border: 2px dashed rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;}
-        .logo-preview-image { max-height: 60px; max-width: 100%; object-fit: contain; background-color: rgba(255,255,255,0.9); padding: 5px; border-radius: 5px; margin-bottom: 10px; display: none;}
-        .empty-placeholder { color: #94a3b8; font-size: 12px; margin-bottom: 10px; }
-        .upload-btn { display: inline-block; margin-top: auto; }
+        .logo-preview-box { flex: 1; border: 2px dashed var(--border-color); border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .logo-preview-image { max-height: 60px; max-width: 100%; object-fit: contain; background-color: rgba(255,255,255,0.9); padding: 5px; border-radius: 5px; margin-bottom: 10px; display: none; border: 1px solid #ccc;}
+        .empty-placeholder { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
+        .upload-btn { display: inline-block; margin-top: auto; color: #fff !important;}
     </style>
 </head>
 <body>
@@ -127,7 +176,7 @@
 
     <div id="settings-container">
         <div class="settings-card">
-            <h2>⚙️ لوحة التحكم - الإعدادات العامة</h2>
+            <h2>⚙️ لوحة التحكم - الإعدادات العامة V25</h2>
             <div class="form-row">
                 <div class="form-group" style="flex: 2;"><label>المدرسة:</label><input type="text" id="cfg-school"></div>
                 <div class="form-group" style="flex: 1.5;">
@@ -205,7 +254,7 @@
                 <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--success); color: var(--success);" onclick="importConfig()">📥 استيراد الأوقات</button>
                 <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--danger); color: var(--danger);" onclick="factoryReset()">🗑️ إعادة ضبط المصنع</button>
             </div>
-            <div style="font-size: 11px; color: #94a3b8; margin-top: 5px; text-align: center;">الاستيراد والتصدير ينقل (الأوقات والفسح) برمز مشفر ذكي للبرمجة السريعة للشاشات الأخرى.</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px; text-align: center;">الاستيراد والتصدير ينقل (الأوقات والفسح) برمز مشفر ذكي للبرمجة السريعة للشاشات الأخرى.</div>
         </div>
     </div>
 
@@ -242,7 +291,11 @@
     <div id="main-app" class="hidden">
         <header>
             <div class="logo-right" id="header-logo-edu" style="display: none;"><img id="img-header-edu" src="" alt="شعار التعليم" class="education-logo-img"></div>
-            <div class="logo-left" id="header-logo-school" style="display: none;"><img id="img-header-school" src="" alt="شعار المدرسة" class="education-logo-img"></div>
+            
+            <div class="logo-left">
+                <img id="img-header-school" src="" alt="شعار المدرسة" class="education-logo-img" style="display: none;">
+                <button class="btn-theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️ فاتح</button>
+            </div>
 
             <div class="school-info"><h1 id="display-school-name">--</h1></div>
             <div class="current-time" id="clock">00:00:00</div>
@@ -262,7 +315,7 @@
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div class="timer" id="main-timer">--:--</div>
                         <div style="flex: 1; margin-right: 3vw;">
-                            <div class="timer-label" id="timer-label" style="text-align: right;">الوقت المتبقي</div>
+                            <div class="timer-label" id="timer-label" style="text-align: right; color: var(--text-muted); font-weight: bold;">الوقت المتبقي</div>
                             <div class="progress-wrapper"><div class="progress-bar-fill" id="progress-bar"></div></div>
                             <div class="progress-stats"><span id="progress-percent">0%</span><span id="elapsed-time">مضى: 00:00</span></div>
                         </div>
@@ -288,18 +341,49 @@
         <div class="footer-bar">
             <div id="display-principal-name" style="flex:1;"></div>
             <div style="flex:1; text-align:center;">نظام الإدارة المدرسية الشامل</div>
-            <div style="flex:1; text-align:left;"><button class="btn" style="padding: 2px 10px;" onclick="openSettings()">⚙️ إعدادات</button></div>
+            <div style="flex:1; text-align:left;"><button class="btn" style="padding: 2px 10px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);" onclick="openSettings()">⚙️ إعدادات</button></div>
         </div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'SMART_SCHOOL_V24_DYNAMIC'; // مفتاح النسخة الديناميكية الجديدة
+        const STORAGE_KEY = 'SMART_SCHOOL_V25_DYNAMIC'; 
         let systemActive = false, schoolConfig = null, dynamicSchedule = [];
         let audioCtx = null, announcedStart = null, announcedEnd = null;
         
         let classesList = []; 
         let fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
         const ordinals = ["", "الأولى", "الثانية", "الثالثة", "الرابعة", "الخامسة", "السادسة", "السابعة", "الثامنة", "التاسعة", "العاشرة"];
+
+        // --- كود تبديل الوضع (Dark/Light Mode) ---
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('school_theme_pref', 'light');
+                btn.innerHTML = '🌙 داكن';
+            } else {
+                localStorage.setItem('school_theme_pref', 'dark');
+                btn.innerHTML = '☀️ فاتح';
+            }
+        }
+
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('school_theme_pref');
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            
+            if (savedTheme === 'light') {
+                body.classList.add('light-mode');
+                if(btn) btn.innerHTML = '🌙 داكن';
+            } else {
+                // Default is dark
+                body.classList.remove('light-mode');
+                if(btn) btn.innerHTML = '☀️ فاتح';
+            }
+        }
+        // ----------------------------------------
 
         function processImageUpload(event, type) {
             const file = event.target.files[0];
@@ -343,8 +427,9 @@
             if(!schoolConfig) return;
             const containerEdu = document.getElementById('header-logo-edu'); const imgEdu = document.getElementById('img-header-edu');
             if (schoolConfig.eduLogo) { imgEdu.src = schoolConfig.eduLogo; containerEdu.style.display = 'flex'; } else { containerEdu.style.display = 'none'; }
-            const containerSchool = document.getElementById('header-logo-school'); const imgSchool = document.getElementById('img-header-school');
-            if (schoolConfig.schoolLogo) { imgSchool.src = schoolConfig.schoolLogo; containerSchool.style.display = 'flex'; } else { containerSchool.style.display = 'none'; }
+            
+            const imgSchool = document.getElementById('img-header-school');
+            if (schoolConfig.schoolLogo) { imgSchool.src = schoolConfig.schoolLogo; imgSchool.style.display = 'block'; } else { imgSchool.style.display = 'none'; }
         }
 
         function loadDemoData() {
@@ -378,11 +463,16 @@
         }
 
         window.onload = function() {
+            loadThemePreference(); // استدعاء دالة الثيم عند التحميل
+            
             const savedData = localStorage.getItem(STORAGE_KEY);
-            if (savedData) {
-                let parsed = JSON.parse(savedData);
+            // محاولة جلب البيانات من النسخة السابقة إذا لم تكن موجودة في الجديدة
+            const oldData = localStorage.getItem('SMART_SCHOOL_V24_DYNAMIC'); 
+
+            if (savedData || oldData) {
+                let parsed = JSON.parse(savedData || oldData);
                 schoolConfig = parsed.config;
-                if(!schoolConfig.breaks) schoolConfig.breaks = []; // الهيكل الديناميكي الجديد
+                if(!schoolConfig.breaks) schoolConfig.breaks = []; 
                 classesList = parsed.classes || [];
                 fullTimetable = parsed.timetable || { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} };
             } else {
@@ -485,7 +575,7 @@
                 assemblyDur: parseInt(document.getElementById('cfg-assembly-dur').value) || 0,
                 lessonDur: parseInt(document.getElementById('cfg-lesson-dur').value) || 45,
                 totalLessons: parseInt(document.getElementById('cfg-total-lessons').value) || 7,
-                breaks: breaksArr, // تخزين المصفوفة الديناميكية الجديدة
+                breaks: breaksArr, 
                 prayerAfter: parseInt(document.getElementById('cfg-prayer-after').value) || 0,
                 prayerDur: parseInt(document.getElementById('cfg-prayer-dur').value) || 0,
                 enableTable: document.getElementById('cfg-enable-table').checked,
@@ -497,7 +587,7 @@
             catch (e) { alert("عفواً، سعة الذاكرة ممتلئة! الصورة المرفوعة قد تكون غير صالحة."); }
         }
 
-        function factoryReset() { if(confirm("تحذير: سيتم مسح جميع الإعدادات والجداول! متأكد؟")) { localStorage.removeItem(STORAGE_KEY); location.reload(); } }
+        function factoryReset() { if(confirm("تحذير: سيتم مسح جميع الإعدادات والجداول! متأكد؟")) { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem('SMART_SCHOOL_V24_DYNAMIC'); location.reload(); } }
 
         // التصدير المشفر الذكي
         function exportConfig() {
@@ -524,7 +614,7 @@
                 
                 schoolConfig.breaks = parsed.b || [];
                 document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length;
-                renderDynamicBreaksUI(); // إعادة بناء مربعات الفسح بناء على الاستيراد
+                renderDynamicBreaksUI(); 
 
                 alert("تم استيراد الأوقات بنجاح! اضغط (حفظ الإعدادات) لتفعيلها.");
             } catch(e) { alert("عذراً، الكود غير صحيح أو تالف!"); }
@@ -591,7 +681,6 @@
                 current += schoolConfig.lessonDur;
                 lessonCounter++;
 
-                // توليد الفسح ديناميكياً بناءً على مصفوفة الفسح
                 if (schoolConfig.breaks && schoolConfig.breaks.length > 0) {
                     schoolConfig.breaks.forEach((brk, idx) => {
                         if (brk.after === i && brk.duration > 0) {
@@ -668,7 +757,7 @@
             const title = document.getElementById('live-grid-title');
 
             if (activeItem.type === 'assembly') {
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:#94a3b8; font-size: 2.5vw; padding-top: 2vh;">☀️ الطابور الصباحي جاري الآن</div>`;
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2.5vw; padding-top: 2vh;">☀️ الطابور الصباحي جاري الآن</div>`;
                 title.innerText = `البرنامج الصباحي`; return;
             }
             if (activeItem.type === 'prayer') {
@@ -683,7 +772,7 @@
                 if (nextLessonOverride) {
                     displayIdx = nextLessonOverride.lessonIdx;
                 } else {
-                    grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:#94a3b8; font-size: 2.5vw; padding-top: 2vh;">انتهاء الحصص 🎒</div>`;
+                    grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2.5vw; padding-top: 2vh;">انتهاء الحصص 🎒</div>`;
                     title.innerText = `نهاية اليوم الدراسي`; return;
                 }
             }
@@ -693,7 +782,7 @@
             let dayIdx = saudiDayMap[today];
             
             if(dayIdx === undefined) { 
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:#94a3b8; font-size: 2.5vw; padding-top: 2vh;">عطلة نهاية الأسبوع</div>`;
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2.5vw; padding-top: 2vh;">عطلة نهاية الأسبوع</div>`;
                 title.innerText = `عطلة سعيدة`; return; 
             } 
 
@@ -719,7 +808,7 @@
             });
 
             if(count === 0) { 
-                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:#94a3b8; font-size: 2vw; padding-top: 2vh;">لا يوجد بيانات مدخلة لهذه الحصة في الجدول</div>`;
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); font-size: 2vw; padding-top: 2vh;">لا يوجد بيانات مدخلة لهذه الحصة في الجدول</div>`;
                 title.innerText = `جدول الفصول`; return; 
             }
             
