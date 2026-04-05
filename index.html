@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية V26 (ساعة عقارب ووقت يدوي)</title>
+    <title>نظام الإدارة المدرسية V27 (المتكامل)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         /* إعدادات الألوان (الوضع الداكن الافتراضي) */
@@ -57,6 +57,11 @@
         .checkbox-item input { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--primary); }
         .break-config-box { background: var(--item-bg); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed rgba(56, 189, 248, 0.3); }
 
+        .logo-upload-section { display: flex; gap: 15px; }
+        .logo-preview-box { flex: 1; border: 2px dashed var(--border-color); border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .logo-preview-image { max-height: 60px; max-width: 100%; object-fit: contain; background-color: rgba(255,255,255,0.9); padding: 5px; border-radius: 5px; margin-bottom: 10px; display: none; border: 1px solid #ccc;}
+        .empty-placeholder { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
+
         /* محرر الجدول */
         #schedule-editor-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 10001; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
@@ -65,7 +70,7 @@
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
         th, td { border: 1px solid var(--input-border); padding: 8px; text-align: center; color: var(--text); }
         th { background: var(--bg-color); color: var(--accent); }
-        td input[type="text"] { padding: 5px; border: none; border-radius: 4px; background: var(--item-bg); text-align: center; font-size: 13px; width: 90%; font-family: 'Cairo';}
+        td input[type="text"] { padding: 5px; border: none; border-radius: 4px; background: var(--item-bg); text-align: center; font-size: 13px; width: 90%; font-family: 'Cairo'; color: var(--text);}
 
         /* التفعيل */
         #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
@@ -83,7 +88,7 @@
         
         /* تنسيق الساعات (الرقمية والعقارب) */
         .clocks-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin-top: 5px; }
-        .current-time { font-size: 5vw; /* تكبير الخط */ font-weight: bold; color: var(--text); letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+        .current-time { font-size: 5vw; font-weight: bold; color: var(--text); letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
         
         .analog-clock { width: 6vw; height: 6vw; border: 4px solid var(--clock-border); border-radius: 50%; background: var(--clock-face); position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--hand-color); border-radius: 10px; z-index: 10; }
@@ -144,7 +149,7 @@
 
     <div id="settings-container">
         <div class="settings-card">
-            <h2>⚙️ لوحة التحكم - الإعدادات العامة V26</h2>
+            <h2>⚙️ لوحة التحكم - الإعدادات العامة V27</h2>
             <div class="form-row">
                 <div class="form-group" style="flex: 2;"><label>المدرسة:</label><input type="text" id="cfg-school"></div>
                 <div class="form-group" style="flex: 1.5;">
@@ -167,7 +172,7 @@
                     <div class="form-group"><label>التاريخ الصحيح:</label><input type="date" id="cfg-manual-date"></div>
                     <div class="form-group"><label>الوقت الصحيح الآن:</label><input type="time" id="cfg-manual-time"></div>
                 </div>
-                <div style="font-size: 11px; color: var(--text-muted);">* عند الحفظ، سيحسب النظام الفارق ويستمر بالعمل بدقة. دع الخيار معطلاً إذا كان وقت الشاشة صحيحاً تلقائياً.</div>
+                <div style="font-size: 11px; color: var(--text-muted);">* عند الحفظ، سيحسب النظام الفارق ويستمر بالعمل بدقة.</div>
             </div>
 
             <div class="section-title">التوقيت والحصص</div>
@@ -195,9 +200,21 @@
             </div>
 
             <div class="section-title" style="color: var(--success);">تخصيص الهوية البصرية وشعار المدرسة</div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn" style="flex: 1;" onclick="document.getElementById('edu-logo-input').click()">رفع شعار التعليم</button>
-                <button class="btn" style="flex: 1; background: var(--accent);" onclick="document.getElementById('school-logo-input').click()">رفع شعار المدرسة</button>
+            <div class="logo-upload-section">
+                <div class="logo-preview-box">
+                    <div style="color: var(--primary); font-weight: bold; margin-bottom: 5px;">شعار التعليم (يمين)</div>
+                    <img id="preview-edu" alt="معاينة" class="logo-preview-image">
+                    <div id="placeholder-edu" class="empty-placeholder">لم يتم اختيار صورة</div>
+                    <button class="btn" style="background: var(--primary); color: white;" onclick="document.getElementById('edu-logo-input').click()">⬆️ رفع من الجهاز</button>
+                    <button class="btn" style="background: transparent; color: var(--danger); font-size: 12px; margin-top: 5px; padding: 0;" onclick="removeLogo('edu')">حذف الشعار</button>
+                </div>
+                <div class="logo-preview-box">
+                    <div style="color: var(--accent); font-weight: bold; margin-bottom: 5px;">شعار المدرسة (يسار)</div>
+                    <img id="preview-school" alt="معاينة" class="logo-preview-image">
+                    <div id="placeholder-school" class="empty-placeholder">لم يتم اختيار صورة</div>
+                    <button class="btn" style="background: var(--accent); color: white;" onclick="document.getElementById('school-logo-input').click()">⬆️ رفع من الجهاز</button>
+                    <button class="btn" style="background: transparent; color: var(--danger); font-size: 12px; margin-top: 5px; padding: 0;" onclick="removeLogo('school')">حذف الشعار</button>
+                </div>
             </div>
 
             <div style="background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed var(--success); margin-bottom: 15px; margin-top: 15px;">
@@ -208,7 +225,13 @@
             </div>
 
             <button class="btn btn-success" onclick="saveConfiguration()">حفظ الإعدادات وبدء التشغيل 🚀</button>
-            <button class="btn" style="background: transparent; border: 1px dashed var(--danger); color: var(--danger); width: 100%; margin-top: 10px;" onclick="factoryReset()">🗑️ إعادة ضبط المصنع</button>
+            
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--primary); color: var(--primary);" onclick="exportConfig()">📋 تصدير الأوقات</button>
+                <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--success); color: var(--success);" onclick="importConfig()">📥 استيراد الأوقات</button>
+                <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--danger); color: var(--danger);" onclick="factoryReset()">🗑️ إعادة ضبط المصنع</button>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px; text-align: center;">الاستيراد والتصدير ينقل (الأوقات والفسح) برمز مشفر ذكي للبرمجة السريعة للشاشات الأخرى.</div>
         </div>
     </div>
 
@@ -285,7 +308,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'SMART_SCHOOL_V26_DYNAMIC'; 
+        const STORAGE_KEY = 'SMART_SCHOOL_V27_DYNAMIC'; 
         let systemActive = false, schoolConfig = null, dynamicSchedule = [];
         let classesList = [], fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
         const ordinals = ["", "الأولى", "الثانية", "الثالثة", "الرابعة", "الخامسة", "السادسة", "السابعة", "الثامنة", "التاسعة", "العاشرة"];
@@ -325,32 +348,70 @@
                     canvas.width = width; canvas.height = height;
                     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
                     if (type === 'edu') schoolConfig.eduLogo = canvas.toDataURL('image/png', 0.9); else schoolConfig.schoolLogo = canvas.toDataURL('image/png', 0.9);
+                    updateLogoPreviews();
                 }
                 img.src = e.target.result;
             }
             reader.readAsDataURL(file); event.target.value = ''; 
         }
 
+        function removeLogo(type) {
+            if (type === 'edu') schoolConfig.eduLogo = null; else schoolConfig.schoolLogo = null;
+            updateLogoPreviews();
+        }
+
+        function updateLogoPreviews() {
+            if(!schoolConfig) return;
+            const pEdu = document.getElementById('preview-edu'); const hEdu = document.getElementById('placeholder-edu');
+            if (schoolConfig.eduLogo) { pEdu.src = schoolConfig.eduLogo; pEdu.style.display = 'block'; hEdu.style.display = 'none'; } 
+            else { pEdu.style.display = 'none'; hEdu.style.display = 'block'; }
+
+            const pSchool = document.getElementById('preview-school'); const hSchool = document.getElementById('placeholder-school');
+            if (schoolConfig.schoolLogo) { pSchool.src = schoolConfig.schoolLogo; pSchool.style.display = 'block'; hSchool.style.display = 'none'; } 
+            else { pSchool.style.display = 'none'; hSchool.style.display = 'block'; }
+        }
+
         function applyLogosToHeader() {
             if(!schoolConfig) return;
             const cEdu = document.getElementById('header-logo-edu'), iEdu = document.getElementById('img-header-edu');
             if (schoolConfig.eduLogo) { iEdu.src = schoolConfig.eduLogo; cEdu.style.display = 'flex'; } else cEdu.style.display = 'none';
-            const iSch = document.getElementById('img-header-school');
+            const iSch = document.getElementById('img-header-school'), cSch = document.querySelector('.logo-left');
             if (schoolConfig.schoolLogo) { iSch.src = schoolConfig.schoolLogo; iSch.style.display = 'block'; } else iSch.style.display = 'none';
         }
 
+        // تم استعادة البيانات التجريبية
         function loadDemoData() {
             schoolConfig = {
                 schoolName: "مدرسة عثمان بن عفان", principalTitle: "مدير المدرسة", principalName: "أ. علي",
                 newsTicker: "أهلاً بكم في نظام الإدارة المدرسية الذكي", startTime: "06:45", assemblyDur: 15, lessonDur: 45, totalLessons: 7,
-                breaks: [{ after: 3, duration: 15, classes: [] }, { after: 5, duration: 15, classes: [] }],
+                breaks: [
+                    { after: 3, duration: 15, classes: ["الصف الأول", "الصف الثاني", "الصف الثالث"] },
+                    { after: 5, duration: 15, classes: ["الصف الرابع", "الصف الخامس", "الصف السادس"] }
+                ],
                 prayerAfter: 6, prayerDur: 20, enableTable: true, eduLogo: null, schoolLogo: null, timeOffsetMs: 0 
             };
+
+            classesList = ["الصف الأول", "الصف الثاني", "الصف الثالث", "الصف الرابع", "الصف الخامس", "الصف السادس"];
+            const demoSubjects = [
+                ["لغتي", "رياضيات", "علوم", "قرآن", "بدنية", "إسلامية", "فنية"],
+                ["قرآن", "لغتي", "رياضيات", "إنجليزي", "اجتماعيات", "علوم", "حاسب"],
+                ["رياضيات", "علوم", "فنية", "لغتي", "بدنية", "قرآن", "إسلامية"],
+                ["اجتماعيات", "إنجليزي", "رياضيات", "حاسب", "لغتي", "علوم", "قرآن"],
+                ["علوم", "رياضيات", "لغتي", "قرآن", "إسلامية", "بدنية", "اجتماعيات"],
+                ["إنجليزي", "قرآن", "حاسب", "رياضيات", "لغتي", "علوم", "فنية"]
+            ];
+            for(let d=0; d<5; d++) {
+                classesList.forEach((cls, idx) => {
+                    let daySchedule = [];
+                    for(let p=0; p<7; p++) { daySchedule.push(demoSubjects[idx][(p + d) % 7]); }
+                    fullTimetable[d][cls] = daySchedule;
+                });
+            }
         }
 
         window.onload = function() {
             loadThemePreference(); 
-            const savedData = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('SMART_SCHOOL_V25_DYNAMIC');
+            const savedData = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('SMART_SCHOOL_V26_DYNAMIC');
             if (savedData) {
                 let parsed = JSON.parse(savedData);
                 schoolConfig = parsed.config;
@@ -375,7 +436,7 @@
             document.getElementById('dynamic-breaks-container').innerHTML = html;
             for(let i=0; i<num; i++) {
                 let bC = document.getElementById(`break-checkboxes-${i}`);
-                if(classesList.length === 0) { bC.innerHTML = '<div style="color:red; font-size:12px;">أضف فصولاً من الجدول أولاً</div>'; continue; }
+                if(classesList.length === 0) { bC.innerHTML = '<div style="color:red; font-size:12px;">أضف فصولاً من الجدول أولاً لتخصيص الفسح</div>'; continue; }
                 let eC = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].classes : [];
                 classesList.forEach(cls => { let c = eC.includes(cls) ? 'checked' : ''; bC.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${cls}" class="b-chk-${i}" ${c}> ${cls}</label>`; });
             }
@@ -385,13 +446,13 @@
             if(!schoolConfig) return;
             document.getElementById('cfg-school').value = schoolConfig.schoolName; document.getElementById('cfg-principal-title').value = schoolConfig.principalTitle; document.getElementById('cfg-principal').value = schoolConfig.principalName; document.getElementById('cfg-news').value = schoolConfig.newsTicker; document.getElementById('cfg-start').value = schoolConfig.startTime; document.getElementById('cfg-assembly-dur').value = schoolConfig.assemblyDur; document.getElementById('cfg-lesson-dur').value = schoolConfig.lessonDur; document.getElementById('cfg-total-lessons').value = schoolConfig.totalLessons; document.getElementById('cfg-prayer-after').value = schoolConfig.prayerAfter; document.getElementById('cfg-prayer-dur').value = schoolConfig.prayerDur; document.getElementById('cfg-enable-table').checked = schoolConfig.enableTable;
             document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length; renderDynamicBreaksUI();
+            updateLogoPreviews();
         }
 
         function saveConfiguration() {
             const numBreaks = parseInt(document.getElementById('cfg-num-breaks').value); let breaksArr = [];
             for(let i=0; i<numBreaks; i++) { let after = parseInt(document.getElementById(`cfg-break-after-${i}`).value)||0; let dur = parseInt(document.getElementById(`cfg-break-dur-${i}`).value)||0; let sel = Array.from(document.querySelectorAll(`.b-chk-${i}:checked`)).map(cb => cb.value); breaksArr.push({ after: after, duration: dur, classes: sel }); }
             
-            // حساب فرق الوقت اليدوي
             let offset = 0;
             if(document.getElementById('cfg-manual-time-enable').checked) {
                 let dateVal = document.getElementById('cfg-manual-date').value;
@@ -401,14 +462,42 @@
                     let currentMs = new Date().getTime();
                     offset = targetMs - currentMs;
                 }
-            } else { offset = 0; } // تصفير إذا تم إلغاء الخيار
+            } else { offset = 0; }
 
             const config = { schoolName: document.getElementById('cfg-school').value, principalTitle: document.getElementById('cfg-principal-title').value, principalName: document.getElementById('cfg-principal').value, newsTicker: document.getElementById('cfg-news').value, startTime: document.getElementById('cfg-start').value, assemblyDur: parseInt(document.getElementById('cfg-assembly-dur').value)||0, lessonDur: parseInt(document.getElementById('cfg-lesson-dur').value)||45, totalLessons: parseInt(document.getElementById('cfg-total-lessons').value)||7, breaks: breaksArr, prayerAfter: parseInt(document.getElementById('cfg-prayer-after').value)||0, prayerDur: parseInt(document.getElementById('cfg-prayer-dur').value)||0, enableTable: document.getElementById('cfg-enable-table').checked, eduLogo: schoolConfig.eduLogo, schoolLogo: schoolConfig.schoolLogo, timeOffsetMs: offset };
             
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ config: config, classes: classesList, timetable: fullTimetable })); alert("تم الحفظ بنجاح!"); location.reload(); } catch (e) { alert("الذاكرة ممتلئة!"); }
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ config: config, classes: classesList, timetable: fullTimetable })); alert("تم الحفظ بنجاح!"); location.reload(); } catch (e) { alert("الذاكرة ممتلئة! يرجى تخفيف حجم الصور."); }
         }
 
-        function factoryReset() { if(confirm("مسح كل شيء؟")) { localStorage.clear(); location.reload(); } }
+        function factoryReset() { if(confirm("تحذير: سيتم مسح جميع الإعدادات والجداول! متأكد؟")) { localStorage.clear(); location.reload(); } }
+
+        // تم استعادة دوال الاستيراد والتصدير
+        function exportConfig() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if(!data) return alert("احفظ الإعدادات أولاً!");
+            const c = JSON.parse(data).config;
+            const minConfig = { t: c.startTime, a: c.assemblyDur, l: c.lessonDur, n: c.totalLessons, b: c.breaks, pa: c.prayerAfter, pd: c.prayerDur };
+            const code = btoa(encodeURIComponent(JSON.stringify(minConfig)));
+            prompt("انسخ هذا الكود المشفّر (يتضمن الأوقات وإعدادات الفسح):", code);
+        }
+
+        function importConfig() {
+            const code = prompt("أدخل الكود المشفّر هنا:");
+            if(!code) return;
+            try {
+                const parsed = JSON.parse(decodeURIComponent(atob(code)));
+                document.getElementById('cfg-start').value = parsed.t;
+                document.getElementById('cfg-assembly-dur').value = parsed.a;
+                document.getElementById('cfg-lesson-dur').value = parsed.l;
+                document.getElementById('cfg-total-lessons').value = parsed.n;
+                document.getElementById('cfg-prayer-after').value = parsed.pa;
+                document.getElementById('cfg-prayer-dur').value = parsed.pd;
+                schoolConfig.breaks = parsed.b || [];
+                document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length;
+                renderDynamicBreaksUI(); 
+                alert("تم استيراد الأوقات بنجاح! اضغط (حفظ الإعدادات) لتفعيلها.");
+            } catch(e) { alert("عذراً، الكود غير صحيح أو تالف!"); }
+        }
 
         function openEditor() { document.getElementById('settings-container').classList.add('hidden'); document.getElementById('schedule-editor-modal').classList.remove('hidden'); renderEditorTable(); }
         function closeEditor() { saveEditorData(); document.getElementById('schedule-editor-modal').classList.add('hidden'); document.getElementById('settings-container').classList.remove('hidden'); renderDynamicBreaksUI(); }
@@ -439,7 +528,6 @@
             document.getElementById('display-principal-name').innerText = schoolConfig.principalName ? `${schoolConfig.principalTitle||"إدارة"}: ${schoolConfig.principalName}` : "";
         }
 
-        // الحصول على الوقت المصحح
         function getCorrectedDate() {
             let realNow = new Date().getTime();
             let offset = schoolConfig.timeOffsetMs || 0;
@@ -488,9 +576,8 @@
 
         function update() {
             if (!systemActive) return;
-            const now = getCorrectedDate(); // استخدام الوقت المصحح دائماً
+            const now = getCorrectedDate();
             
-            // تحديث ساعة العقارب
             let hh = now.getHours(), mm = now.getMinutes(), ss = now.getSeconds();
             document.getElementById('hr-hand').style.transform = `rotateZ(${(hh * 30) + (mm * 0.5)}deg)`;
             document.getElementById('mn-hand').style.transform = `rotateZ(${mm * 6}deg)`;
