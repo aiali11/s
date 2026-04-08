@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية V29 (إصلاح الوقت والشاشات)</title>
+    <title>نظام الإدارة المدرسية الشامل V30</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -32,19 +32,25 @@
         * { scrollbar-width: none; -ms-overflow-style: none; transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; }
         body { background-color: var(--bg-color); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden; box-sizing: border-box; }
         .hidden { display: none !important; }
+        
+        /* الأزرار والإدخالات */
+        .btn { background: var(--primary); color: #ffffff; border: none; padding: 10px 15px; border-radius: 8px; font-size: 16px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-success { background: var(--success); color: white; padding: 15px; width: 100%; margin-top: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); font-size: 18px;}
+        .btn-danger { background: var(--danger); color: white; }
+        input[type="text"], input[type="number"], input[type="time"], input[type="date"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; font-weight: bold;}
+        input:focus, select:focus { outline: none; border-color: var(--primary); }
+        
+        /* الحاويات */
         #settings-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: flex-start; overflow-y: auto; padding: 20px; box-sizing: border-box; }
         .settings-card { background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); width: 100%; max-width: 800px; border: 1px solid var(--primary); margin: auto; }
         .settings-card h2 { color: var(--primary); text-align: center; margin-top: 0; font-weight: 900; }
         .form-row { display: flex; gap: 15px; margin-bottom: 12px; }
         .form-group { flex: 1; margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--text-muted); font-size: 14px;}
-        input[type="text"], input[type="number"], input[type="time"], input[type="date"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
         .section-title { border-bottom: 1px solid var(--primary); color: var(--accent); margin: 15px 0 10px 0; padding-bottom: 5px; font-weight: bold; font-size: 16px; }
-        .btn { background: var(--primary); color: #ffffff; border: none; padding: 10px 15px; border-radius: 8px; font-size: 16px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; transform: scale(1.02); }
-        .btn-success { background: var(--success); color: white; padding: 15px; width: 100%; margin-top: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); font-size: 18px;}
-        .btn-danger { background: var(--danger); color: white; }
+        
+        /* الفسح والشعارات */
         .checkbox-grid { display: flex; flex-wrap: wrap; gap: 8px; background: var(--item-bg); padding: 10px; border-radius: 8px; min-height: 42px; align-items: center;}
         .checkbox-item { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 6px 12px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);}
         .checkbox-item input { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--primary); }
@@ -52,18 +58,23 @@
         .logo-upload-section { display: flex; gap: 15px; }
         .logo-preview-box { flex: 1; border: 2px dashed var(--border-color); border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center;}
         .logo-preview-image { max-height: 60px; max-width: 100%; object-fit: contain; background-color: rgba(255,255,255,0.9); padding: 5px; border-radius: 5px; margin-bottom: 10px; display: none; }
-        .empty-placeholder { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
         .manual-time-box { background: rgba(239, 68, 68, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed var(--danger); margin-bottom: 15px; }
+        
+        /* المحرر */
         #schedule-editor-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 10001; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
         .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
         .editor-controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; background: var(--card-bg); padding: 15px; border-radius: 10px;}
         .table-wrapper { overflow-x: auto; background: var(--card-bg); border-radius: 10px; padding: 10px; }
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
         th, td { border: 1px solid var(--input-border); padding: 8px; text-align: center; color: var(--text); }
-        th { background: var(--bg-color); color: var(--accent); }
+        th { background: var(--bg-color); color: var(--accent); font-weight: 900;}
         td input[type="text"] { padding: 5px; border: none; border-radius: 4px; background: var(--item-bg); text-align: center; width: 90%; font-family: 'Cairo'; color: var(--text);}
+        
+        /* واجهة التفعيل */
         #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
-        #start-btn { background: var(--primary); color: #ffffff; border: none; padding: 20px 50px; border-radius: 15px; font-size: 3vw; font-family: 'Cairo'; font-weight: bold; cursor: pointer; }
+        #start-btn { background: var(--primary); color: #ffffff; border: none; padding: 20px 50px; border-radius: 15px; font-size: 3vw; font-family: 'Cairo'; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);}
+        
+        /* النظام الأساسي */
         #main-app { display: flex; flex-direction: column; height: 100%; width: 100%; padding: 0.5vh 1vw; box-sizing: border-box; }
         header { position: relative; flex-shrink: 0; padding: 1.5vh; background: var(--header-bg); border-bottom: 2px solid var(--primary); display: flex; flex-direction: column; align-items: center; gap: 5px; border-radius: 10px 10px 0 0; padding-right: 90px; padding-left: 90px; }
         .logo-right { position: absolute; top: 50%; transform: translateY(-50%); right: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; }
@@ -71,6 +82,8 @@
         .education-logo-img { max-height: 100%; width: auto; object-fit: contain; background-color: rgba(255, 255, 255, 0.9); padding: 5px 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .btn-theme-toggle { background: var(--bg-color); color: var(--text); border: 2px solid var(--primary); padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 1vw; font-family: 'Cairo'; font-weight: bold; display: flex; align-items: center; gap: 5px;}
         .school-info h1 { margin: 0; font-size: 2vw; color: var(--accent); font-weight: 900;}
+        
+        /* الساعات */
         .clocks-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin-top: 5px; }
         .current-time { font-size: 5vw; font-weight: bold; color: var(--text); letter-spacing: 2px;}
         .analog-clock { width: 6vw; height: 6vw; border: 4px solid var(--clock-border); border-radius: 50%; background: var(--clock-face); position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
@@ -80,6 +93,8 @@
         .second-hand { width: 2px; height: 40%; margin-left: -1px; background: var(--danger); z-index: 11; }
         .center-dot { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; transform: translate(-50%, -50%); z-index: 12; }
         .dates-container { display: flex; justify-content: center; gap: 30px; background: var(--item-bg); padding: 4px 20px; border-radius: 12px; font-size: 0.9vw; color: var(--text-muted); font-weight: bold;}
+        
+        /* الجداول والبطاقات */
         .main-body { display: flex; flex: 1; padding: 1vh 0; gap: 15px; box-sizing: border-box; min-height: 0; overflow: hidden; }
         .schedule-sidebar { width: 25%; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overflow-x: hidden;}
         .schedule-title { text-align: center; color: var(--primary); font-weight: bold; margin-bottom: 10px; font-size: 1.2vw; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;}
@@ -122,7 +137,7 @@
 
     <div id="settings-container">
         <div class="settings-card">
-            <h2>⚙️ لوحة التحكم - الإعدادات العامة V29</h2>
+            <h2>⚙️ لوحة التحكم - الإصدار الذهبي V30</h2>
             <div class="form-row">
                 <div class="form-group" style="flex: 2;"><label>المدرسة:</label><input type="text" id="cfg-school"></div>
                 <div class="form-group" style="flex: 1.5;">
@@ -136,10 +151,13 @@
             <div class="form-group"><label>شريط الأخبار:</label><input type="text" id="cfg-news"></div>
             
             <div class="manual-time-box">
-                <div style="color: var(--danger); font-weight: bold; margin-bottom: 10px;">🕒 معالجة مشكلة وقت الشاشة (الوقت اليدوي)</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="color: var(--danger); font-weight: bold;">🕒 معالجة مشكلة وقت الشاشة (الوقت اليدوي)</div>
+                    <button class="btn" style="background: transparent; color: var(--text); border: 1px solid var(--text-muted); padding: 5px 10px; font-size: 12px;" onclick="testAudio()">🔊 تجربة الصوت والجرس</button>
+                </div>
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                     <input type="checkbox" id="cfg-manual-time-enable" style="width: auto;" onchange="toggleManualTimeInputs()">
-                    <label for="cfg-manual-time-enable" style="margin: 0; cursor: pointer; color: var(--text);">تفعيل ضبط الوقت يدوياً (متوافق مع جميع الشاشات)</label>
+                    <label for="cfg-manual-time-enable" style="margin: 0; cursor: pointer; color: var(--text);">تفعيل ضبط الوقت يدوياً (محمي ضد الأصفار)</label>
                 </div>
                 <div class="form-row" id="manual-time-inputs" style="opacity: 0.5; pointer-events: none;">
                     <div class="form-group"><label>التاريخ الصحيح:</label><input type="date" id="cfg-manual-date"></div>
@@ -147,18 +165,18 @@
                         <label>الوقت الصحيح الآن:</label>
                         <div style="display: flex; gap: 5px; align-items: center; direction: ltr;">
                             <select id="cfg-manual-hour" style="flex: 1; font-weight: bold;"></select>
-                            <span style="font-weight: bold; font-size: 20px;">:</span>
+                            <span style="font-weight: bold; font-size: 20px; color: var(--text);">:</span>
                             <select id="cfg-manual-minute" style="flex: 1; font-weight: bold;"></select>
                         </div>
                     </div>
                 </div>
-                <div style="font-size: 11px; color: var(--text-muted);">* عند الحفظ، سيتذكر النظام الوقت حتى لو تم إغلاقه.</div>
+                <div style="font-size: 11px; color: var(--text-muted);">* لن يتم الحفظ كأصفار أبداً بفضل الحماية الجديدة.</div>
             </div>
 
             <div class="section-title">التوقيت والحصص</div>
             <div class="form-row">
                 <div class="form-group"><label>بداية الطابور:</label><input type="time" id="cfg-start" value="06:45"></div>
-                <div class="form-group"><label>مدة الطابور:</label><input type="number" id="cfg-assembly-dur" value="15"></div>
+                <div class="form-group"><label>مدة الطابور (0 للإلغاء):</label><input type="number" id="cfg-assembly-dur" value="15"></div>
                 <div class="form-group"><label>مدة الحصة:</label><input type="number" id="cfg-lesson-dur" value="45"></div>
                 <div class="form-group"><label>عدد الحصص:</label><select id="cfg-total-lessons"><option value="6">6</option><option value="7" selected>7</option><option value="8">8</option></select></div>
             </div>
@@ -199,7 +217,7 @@
 
             <div style="background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed var(--success); margin-bottom: 15px; margin-top: 15px;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div><input type="checkbox" id="cfg-enable-table" checked style="width: auto; display: inline-block;"> <label for="cfg-enable-table" style="display: inline-block; font-weight: bold; color: var(--success); cursor: pointer;">تفعيل عرض الجدول</label></div>
+                    <div><input type="checkbox" id="cfg-enable-table" checked style="width: auto; display: inline-block;"> <label for="cfg-enable-table" style="display: inline-block; font-weight: bold; color: var(--success); cursor: pointer;">تفعيل عرض الجدول الأسبوعي</label></div>
                     <button class="btn" style="background: var(--success);" onclick="openEditor()">📝 تعبئة جدول الفصول</button>
                 </div>
             </div>
@@ -239,7 +257,6 @@
                 <button class="btn-theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️ فاتح</button>
             </div>
             <div class="school-info"><h1 id="display-school-name">--</h1></div>
-            
             <div class="clocks-container">
                 <div class="analog-clock">
                     <div class="hand hour-hand" id="hr-hand"></div>
@@ -279,18 +296,19 @@
         </div>
         <div class="footer-bar">
             <div id="display-principal-name" style="flex:1;"></div>
-            <div style="flex:1; text-align:center;">نظام الإدارة المدرسية الشامل</div>
+            <div style="flex:1; text-align:center;">نظام الإدارة المدرسية الشامل V30</div>
             <div style="flex:1; text-align:left;"><button class="btn" style="padding: 2px 10px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);" onclick="openSettings()">⚙️ إعدادات</button></div>
         </div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'SMART_SCHOOL_V29_DYNAMIC'; 
+        const STORAGE_KEY = 'SMART_SCHOOL_V30_GOLDEN'; 
         let systemActive = false, schoolConfig = null, dynamicSchedule = [];
         let classesList = [], fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
         const ordinals = ["", "الأولى", "الثانية", "الثالثة", "الرابعة", "الخامسة", "السادسة", "السابعة", "الثامنة", "التاسعة", "العاشرة"];
         let audioCtx = null, announcedStart = null, announcedEnd = null;
 
+        // تهيئة القوائم المنسدلة
         function initTimeDropdowns() {
             let hrSelect = document.getElementById('cfg-manual-hour');
             let mnSelect = document.getElementById('cfg-manual-minute');
@@ -298,24 +316,24 @@
             for(let i=0; i<60; i++) mnSelect.innerHTML += `<option value="${i}">${String(i).padStart(2,'0')}</option>`;
         }
 
+        // الثيم المظلم والفاتح
         function toggleTheme() {
             const body = document.body; const btn = document.getElementById('theme-btn');
             body.classList.toggle('light-mode');
             if (body.classList.contains('light-mode')) { localStorage.setItem('school_theme_pref', 'light'); btn.innerHTML = '🌙 داكن'; } 
             else { localStorage.setItem('school_theme_pref', 'dark'); btn.innerHTML = '☀️ فاتح'; }
         }
-
         function loadThemePreference() {
-            const savedTheme = localStorage.getItem('school_theme_pref');
-            if (savedTheme === 'light') { document.body.classList.add('light-mode'); document.getElementById('theme-btn').innerHTML = '🌙 داكن'; } 
+            if (localStorage.getItem('school_theme_pref') === 'light') { document.body.classList.add('light-mode'); document.getElementById('theme-btn').innerHTML = '🌙 داكن'; } 
         }
 
+        // التعامل مع الوقت اليدوي بحماية
         function toggleManualTimeInputs() {
             const isChecked = document.getElementById('cfg-manual-time-enable').checked;
             const container = document.getElementById('manual-time-inputs');
             container.style.opacity = isChecked ? '1' : '0.5';
             container.style.pointerEvents = isChecked ? 'auto' : 'none';
-            if(isChecked) {
+            if(isChecked && !document.getElementById('cfg-manual-date').value) {
                 let d = new Date();
                 document.getElementById('cfg-manual-date').value = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
                 document.getElementById('cfg-manual-hour').value = d.getHours();
@@ -340,9 +358,7 @@
             }
             reader.readAsDataURL(file); event.target.value = ''; 
         }
-
         function removeLogo(type) { if (type === 'edu') schoolConfig.eduLogo = null; else schoolConfig.schoolLogo = null; updateLogoPreviews(); }
-
         function updateLogoPreviews() {
             if(!schoolConfig) return;
             const pEdu = document.getElementById('preview-edu'), hEdu = document.getElementById('placeholder-edu');
@@ -350,7 +366,6 @@
             const pSchool = document.getElementById('preview-school'), hSchool = document.getElementById('placeholder-school');
             if (schoolConfig.schoolLogo) { pSchool.src = schoolConfig.schoolLogo; pSchool.style.display = 'block'; hSchool.style.display = 'none'; } else { pSchool.style.display = 'none'; hSchool.style.display = 'block'; }
         }
-
         function applyLogosToHeader() {
             if(!schoolConfig) return;
             const cEdu = document.getElementById('header-logo-edu'), iEdu = document.getElementById('img-header-edu');
@@ -376,15 +391,15 @@
         }
 
         window.onload = function() {
-            loadThemePreference(); 
-            initTimeDropdowns();
-            const savedData = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('SMART_SCHOOL_V28_DYNAMIC');
+            loadThemePreference(); initTimeDropdowns();
+            const savedData = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('SMART_SCHOOL_V29_DYNAMIC');
             if (savedData) {
-                let parsed = JSON.parse(savedData);
-                schoolConfig = parsed.config;
-                if(!schoolConfig.breaks) schoolConfig.breaks = []; 
-                if(!schoolConfig.timeOffsetMs) schoolConfig.timeOffsetMs = 0;
-                classesList = parsed.classes || []; fullTimetable = parsed.timetable || { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} };
+                try {
+                    let parsed = JSON.parse(savedData); schoolConfig = parsed.config;
+                    if(!schoolConfig.breaks) schoolConfig.breaks = []; 
+                    if(isNaN(schoolConfig.timeOffsetMs) || schoolConfig.timeOffsetMs === null) schoolConfig.timeOffsetMs = 0; // الحماية الأساسية
+                    classesList = parsed.classes || []; fullTimetable = parsed.timetable || { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} };
+                } catch(e) { loadDemoData(); }
             } else { loadDemoData(); }
             populateSettingsForm();
             document.getElementById('settings-container').classList.add('hidden'); document.getElementById('start-overlay').classList.remove('hidden');
@@ -395,8 +410,7 @@
         function renderDynamicBreaksUI() {
             const num = parseInt(document.getElementById('cfg-num-breaks').value); let html = "";
             for(let i=0; i<num; i++) {
-                let eA = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].after : "";
-                let eD = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].duration : 15;
+                let eA = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].after : ""; let eD = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].duration : 15;
                 html += `<div class="break-config-box"><div style="color:var(--primary);font-weight:bold;margin-bottom:10px;">الفسحة رقم (${i+1})</div><div class="form-row"><div class="form-group"><label>بعد الحصة:</label><input type="number" id="cfg-break-after-${i}" value="${eA}"></div><div class="form-group"><label>مدتها (دقائق):</label><input type="number" id="cfg-break-dur-${i}" value="${eD}"></div></div><div class="form-group"><label>الفصول المخصصة (ضع علامة صح):</label><div id="break-checkboxes-${i}" class="checkbox-grid"></div></div></div>`;
             }
             document.getElementById('dynamic-breaks-container').innerHTML = html;
@@ -413,19 +427,16 @@
             document.getElementById('cfg-school').value = schoolConfig.schoolName; document.getElementById('cfg-principal-title').value = schoolConfig.principalTitle; document.getElementById('cfg-principal').value = schoolConfig.principalName; document.getElementById('cfg-news').value = schoolConfig.newsTicker; document.getElementById('cfg-start').value = schoolConfig.startTime; document.getElementById('cfg-assembly-dur').value = schoolConfig.assemblyDur; document.getElementById('cfg-lesson-dur').value = schoolConfig.lessonDur; document.getElementById('cfg-total-lessons').value = schoolConfig.totalLessons; document.getElementById('cfg-prayer-after').value = schoolConfig.prayerAfter; document.getElementById('cfg-prayer-dur').value = schoolConfig.prayerDur; document.getElementById('cfg-enable-table').checked = schoolConfig.enableTable;
             document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length; renderDynamicBreaksUI(); updateLogoPreviews();
 
-            // استعادة خيارات الوقت اليدوي المحفوظة
-            if(schoolConfig.timeOffsetMs && schoolConfig.timeOffsetMs !== 0) {
+            if(schoolConfig.timeOffsetMs && !isNaN(schoolConfig.timeOffsetMs) && schoolConfig.timeOffsetMs !== 0) {
                 document.getElementById('cfg-manual-time-enable').checked = true;
                 let cDate = getCorrectedDate();
                 document.getElementById('cfg-manual-date').value = cDate.getFullYear() + '-' + String(cDate.getMonth()+1).padStart(2,'0') + '-' + String(cDate.getDate()).padStart(2,'0');
                 document.getElementById('cfg-manual-hour').value = cDate.getHours();
                 document.getElementById('cfg-manual-minute').value = cDate.getMinutes();
-                document.getElementById('manual-time-inputs').style.opacity = '1';
-                document.getElementById('manual-time-inputs').style.pointerEvents = 'auto';
+                document.getElementById('manual-time-inputs').style.opacity = '1'; document.getElementById('manual-time-inputs').style.pointerEvents = 'auto';
             } else {
                 document.getElementById('cfg-manual-time-enable').checked = false;
-                document.getElementById('manual-time-inputs').style.opacity = '0.5';
-                document.getElementById('manual-time-inputs').style.pointerEvents = 'none';
+                document.getElementById('manual-time-inputs').style.opacity = '0.5'; document.getElementById('manual-time-inputs').style.pointerEvents = 'none';
             }
         }
 
@@ -433,18 +444,18 @@
             const numBreaks = parseInt(document.getElementById('cfg-num-breaks').value); let breaksArr = [];
             for(let i=0; i<numBreaks; i++) { let after = parseInt(document.getElementById(`cfg-break-after-${i}`).value)||0; let dur = parseInt(document.getElementById(`cfg-break-dur-${i}`).value)||0; let sel = Array.from(document.querySelectorAll(`.b-chk-${i}:checked`)).map(cb => cb.value); breaksArr.push({ after: after, duration: dur, classes: sel }); }
             
-            // حساب الوقت اليدوي بالطريقة الكلاسيكية التي تفهمها جميع الشاشات (لا يوجد مشكلة NaN هنا)
+            // الحماية الصارمة للوقت عند الحفظ
             let offset = 0;
             if(document.getElementById('cfg-manual-time-enable').checked) {
                 let dateVal = document.getElementById('cfg-manual-date').value;
                 let hVal = document.getElementById('cfg-manual-hour').value;
                 let mVal = document.getElementById('cfg-manual-minute').value;
                 if(dateVal && hVal !== "" && mVal !== "") {
-                    let dParts = dateVal.split('-'); // [YYYY, MM, DD]
+                    let dParts = dateVal.split('-'); 
                     if(dParts.length === 3) {
                         let targetMs = new Date(parseInt(dParts[0]), parseInt(dParts[1])-1, parseInt(dParts[2]), parseInt(hVal), parseInt(mVal), 0).getTime();
                         let currentMs = new Date().getTime();
-                        offset = targetMs - currentMs;
+                        if(!isNaN(targetMs) && !isNaN(currentMs)) { offset = targetMs - currentMs; }
                     }
                 }
             }
@@ -453,7 +464,7 @@
             try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ config: config, classes: classesList, timetable: fullTimetable })); alert("تم الحفظ بنجاح!"); location.reload(); } catch (e) { alert("الذاكرة ممتلئة!"); }
         }
 
-        function factoryReset() { if(confirm("مسح كل شيء؟")) { localStorage.clear(); location.reload(); } }
+        function factoryReset() { if(confirm("تحذير: سيتم مسح جميع الإعدادات والجداول! متأكد؟")) { localStorage.clear(); location.reload(); } }
         function exportConfig() { const data = localStorage.getItem(STORAGE_KEY); if(!data) return alert("احفظ أولاً!"); const c = JSON.parse(data).config; const minConfig = { t: c.startTime, a: c.assemblyDur, l: c.lessonDur, n: c.totalLessons, b: c.breaks, pa: c.prayerAfter, pd: c.prayerDur }; prompt("كود التصدير:", btoa(encodeURIComponent(JSON.stringify(minConfig)))); }
         function importConfig() { const code = prompt("أدخل الكود:"); if(!code) return; try { const parsed = JSON.parse(decodeURIComponent(atob(code))); document.getElementById('cfg-start').value = parsed.t; document.getElementById('cfg-assembly-dur').value = parsed.a; document.getElementById('cfg-lesson-dur').value = parsed.l; document.getElementById('cfg-total-lessons').value = parsed.n; document.getElementById('cfg-prayer-after').value = parsed.pa; document.getElementById('cfg-prayer-dur').value = parsed.pd; schoolConfig.breaks = parsed.b || []; document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length; renderDynamicBreaksUI(); alert("تم الاستيراد بنجاح! اضغط حفظ."); } catch(e) { alert("الكود خطأ!"); } }
         function openEditor() { document.getElementById('settings-container').classList.add('hidden'); document.getElementById('schedule-editor-modal').classList.remove('hidden'); renderEditorTable(); }
@@ -484,11 +495,28 @@
             document.getElementById('display-principal-name').innerText = schoolConfig.principalName ? `${schoolConfig.principalTitle||"إدارة"}: ${schoolConfig.principalName}` : "";
         }
 
-        function getCorrectedDate() { let realNow = new Date().getTime(); let offset = schoolConfig.timeOffsetMs || 0; return new Date(realNow + offset); }
+        // الحماية عند جلب الوقت
+        function getCorrectedDate() { 
+            let realNow = new Date().getTime(); 
+            let offset = Number(schoolConfig.timeOffsetMs) || 0; 
+            if (isNaN(offset)) offset = 0;
+            let corrected = new Date(realNow + offset);
+            return isNaN(corrected.getTime()) ? new Date() : corrected; 
+        }
 
-        function playChime() {
+        // تجربة الصوت
+        function testAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
+            playChime();
+            setTimeout(() => { 
+                let utterance = new SpeechSynthesisUtterance("هذا اختبار للصوت والجرس"); 
+                utterance.lang = 'ar-SA'; window.speechSynthesis.speak(utterance); 
+            }, 1200);
+        }
+
+        function playChime() {
+            if (!audioCtx) return;
             function beep(freq, delay, dur) {
                 const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                 osc.connect(gain); gain.connect(audioCtx.destination);
@@ -514,8 +542,8 @@
             document.getElementById('start-overlay').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden'); systemActive = true;
             
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            let utterance = new SpeechSynthesisUtterance("بسم الله، بدأ تشغيل النظام"); 
-            utterance.lang = 'ar-SA'; window.speechSynthesis.speak(utterance);
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            let utterance = new SpeechSynthesisUtterance("بسم الله، بدأ التشغيل"); utterance.lang = 'ar-SA'; window.speechSynthesis.speak(utterance);
 
             generateDates(); update(); setInterval(update, 1000);
         }
@@ -559,6 +587,10 @@
             const now = getCorrectedDate();
             
             let hh = now.getHours(), mm = now.getMinutes(), ss = now.getSeconds();
+            
+            // التحديث الليلي التلقائي
+            if (hh === 0 && mm === 0 && ss === 0) { generateDates(); generateSchedule(); }
+
             document.getElementById('hr-hand').style.transform = `rotateZ(${(hh * 30) + (mm * 0.5)}deg)`;
             document.getElementById('mn-hand').style.transform = `rotateZ(${mm * 6}deg)`;
             document.getElementById('sc-hand').style.transform = `rotateZ(${ss * 6}deg)`;
@@ -598,7 +630,6 @@
                 document.getElementById('main-period').innerText = "خارج الدوام"; document.getElementById('progress-bar').style.width = "0%"; document.getElementById('progress-percent').innerText = "0%"; document.getElementById('main-timer').innerText = "--:--"; document.getElementById('break-alert-bar').classList.add('hidden');
                 if(schoolConfig.enableTable) { document.getElementById('classes-grid').innerHTML = ""; document.getElementById('live-grid-title').innerText = "جدول الفصول"; }
             }
-            if(hh === 0 && mm === 0 && ss === 0) generateDates();
         }
     </script>
 </body>
