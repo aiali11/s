@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية الشامل V46</title>
+    <title>نظام الإدارة المدرسية الشامل V49</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -199,7 +199,7 @@
 
     <div id="settings-container">
         <div class="settings-card">
-            <h2>⚙️ لوحة التحكم - الإصدار V46 (تحديث اللغة)</h2>
+            <h2>⚙️ لوحة التحكم - الإصدار V49 (الدقة المطلقة)</h2>
             <div class="form-row">
                 <div class="form-group" style="flex: 2;"><label>المدرسة:</label><input type="text" id="cfg-school" placeholder="اكتب اسم المدرسة هنا..."></div>
                 <div class="form-group" style="flex: 1.5;">
@@ -294,7 +294,7 @@
             </div>
             <div id="custom-dur-wrapper"><div style="width: 100%; color: var(--primary); font-weight: bold; margin-bottom: 10px;">حدد مدة كل حصة بالدقائق:</div><div id="custom-dur-grid" style="display: flex; flex-wrap: wrap; width: 100%; gap: 10px;"></div></div>
 
-            <div class="section-title">توزيع الفسح (ديناميكي)</div>
+            <div class="section-title">توزيع الفسح (ديناميكي وذكي)</div>
             <div class="form-row"><div class="form-group"><label>كم عدد الفسح في مدرستك؟</label><select id="cfg-num-breaks" onchange="renderDynamicBreaksUI()"><option value="0">بدون فسحة</option><option value="1">فسحة واحدة</option><option value="2" selected>فسحتين</option><option value="3">3 فسح</option></select></div></div>
             <div id="dynamic-breaks-container"></div>
             <div class="form-row"><div class="form-group" style="flex: 1;"><label>الصلاة بعد الحصة:</label><input type="number" id="cfg-prayer-after" value="6"></div><div class="form-group" style="flex: 1;"><label>مدتها:</label><input type="number" id="cfg-prayer-dur" value="20"></div></div>
@@ -412,7 +412,7 @@
         </div>
         <div class="footer-bar">
             <div id="display-principal-name" style="flex:1;"></div>
-            <div style="flex:1; text-align:center;">نظام الإدارة المدرسية V46</div>
+            <div style="flex:1; text-align:center;">نظام الإدارة المدرسية V49</div>
             <div style="flex:1; text-align:left;" id="settings-btn-container">
                 <button class="btn" style="padding: 2px 10px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);" onclick="openSettings()">⚙️ إعدادات النظام</button>
             </div>
@@ -420,7 +420,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'SMART_SCHOOL_V46_ARABIC_FIX'; 
+        const STORAGE_KEY = 'SMART_SCHOOL_V49_TIMER_FIX'; 
         let systemActive = false, schoolConfig = null, dynamicSchedule = [];
         let classesList = [], fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
         const ordinals = ["", "الأولى", "الثانية", "الثالثة", "الرابعة", "الخامسة", "السادسة", "السابعة", "الثامنة", "التاسعة", "العاشرة"];
@@ -538,7 +538,7 @@
             schoolConfig = {
                 schoolName: "", principalTitle: "مدير المدرسة", principalName: "",
                 newsTicker: "", startTime: "06:45", assemblyDur: 15, lessonDur: 45, totalLessons: 7,
-                useCustomDurs: false, customDurs: [], breaks: [{ after: 3, duration: 15, classes: [] }, { after: 5, duration: 15, classes: [] }],
+                useCustomDurs: false, customDurs: [], breaks: [{ after: 3, duration: 15, type: 'all', classes: [] }, { after: 5, duration: 15, type: 'all', classes: [] }],
                 prayerAfter: 6, prayerDur: 20, enableTable: true, eduLogo: null, schoolLogo: null, manualTime: { enabled: false, setAtReal: 0, targetTime: 0 },
                 enableMedia: false, mediaLayout: 1, mainDuration: 15, mediaDuration: 10, mediaImages: ["", "", "", ""],
                 ui: { nameSize: 3.5, timerSize: 4.5, progHeight: 1.5, progColor: "#38bdf8", breakColor: "#10b981" }
@@ -566,23 +566,12 @@
                     document.getElementById('settings-btn-container')?.remove();
                     document.getElementById('media-settings-btn-area')?.remove();
                     
-                    let startBtn = document.getElementById('start-btn');
-                    if(startBtn) startBtn.innerText = "فتح الجدول المدرسي 🏫";
-                    
-                    let startOverlay = document.getElementById('start-overlay');
-                    if(startOverlay) startOverlay.classList.remove('hidden');
-                    
-                    let mainApp = document.getElementById('main-app');
-                    if(mainApp) mainApp.classList.add('hidden');
-                    
-                    let mediaOverlay = document.getElementById('media-overlay');
-                    if(mediaOverlay) mediaOverlay.classList.remove('show-media');
-                    
-                    let welcomeName = document.getElementById('welcome-school-name');
-                    if(welcomeName) welcomeName.innerText = schoolConfig.schoolName || "النظام المدرسي"; 
-                    
-                    let whatsappWarn = document.getElementById('whatsapp-warning');
-                    if(whatsappWarn) whatsappWarn.style.display = 'none'; 
+                    let startBtn = document.getElementById('start-btn'); if(startBtn) startBtn.innerText = "فتح الجدول المدرسي 🏫";
+                    let startOverlay = document.getElementById('start-overlay'); if(startOverlay) startOverlay.classList.remove('hidden');
+                    let mainApp = document.getElementById('main-app'); if(mainApp) mainApp.classList.add('hidden');
+                    let mediaOverlay = document.getElementById('media-overlay'); if(mediaOverlay) mediaOverlay.classList.remove('show-media');
+                    let welcomeName = document.getElementById('welcome-school-name'); if(welcomeName) welcomeName.innerText = schoolConfig.schoolName || "النظام المدرسي"; 
+                    let whatsappWarn = document.getElementById('whatsapp-warning'); if(whatsappWarn) whatsappWarn.style.display = 'none'; 
 
                     generateSchedule();
                 } catch(e) { console.error(e); }
@@ -614,14 +603,49 @@
             }
         };
 
+        function toggleBreakType(idx) {
+            let type = document.getElementById(`cfg-break-type-${idx}`).value;
+            let classesContainer = document.getElementById(`break-classes-container-${idx}`);
+            if(type === 'all') { classesContainer.style.display = 'none'; } else { classesContainer.style.display = 'block'; }
+        }
+
         function renderDynamicBreaksUI() {
             try {
                 const num = parseInt(document.getElementById('cfg-num-breaks').value); let html = "";
-                for(let i=0; i<num; i++) { let eA = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].after : ""; let eD = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].duration : 15; html += `<div class="break-config-box"><div style="color:var(--primary);font-weight:bold;margin-bottom:10px;">الفسحة رقم (${i+1})</div><div class="form-row"><div class="form-group"><label>بعد الحصة:</label><input type="number" id="cfg-break-after-${i}" value="${eA}"></div><div class="form-group"><label>مدتها (دقائق):</label><input type="number" id="cfg-break-dur-${i}" value="${eD}"></div></div><div class="form-group"><label>الفصول المخصصة (ضع علامة صح):</label><div id="break-checkboxes-${i}" class="checkbox-grid"></div></div></div>`; }
+                for(let i=0; i<num; i++) { 
+                    let eA = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].after : ""; 
+                    let eD = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].duration : 15; 
+                    let eT = (schoolConfig && schoolConfig.breaks[i] && schoolConfig.breaks[i].type) ? schoolConfig.breaks[i].type : 'all'; 
+                    let displayClasses = eT === 'all' ? 'none' : 'block';
+                    
+                    html += `
+                    <div class="break-config-box">
+                        <div style="color:var(--primary);font-weight:bold;margin-bottom:10px;">الفسحة رقم (${i+1})</div>
+                        <div class="form-row">
+                            <div class="form-group"><label>بعد الحصة:</label><input type="number" id="cfg-break-after-${i}" value="${eA}"></div>
+                            <div class="form-group"><label>مدتها (دقائق):</label><input type="number" id="cfg-break-dur-${i}" value="${eD}"></div>
+                            <div class="form-group">
+                                <label>نظام الفسحة:</label>
+                                <select id="cfg-break-type-${i}" onchange="toggleBreakType(${i})">
+                                    <option value="all" ${eT === 'all' ? 'selected' : ''}>شاملة (تتوقف جميع الحصص)</option>
+                                    <option value="custom" ${eT === 'custom' ? 'selected' : ''}>مخصصة (لفصول محددة فقط)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="break-classes-container-${i}" style="display: ${displayClasses};">
+                            <label>حدد الفصول المشمولة بالفسحة (ضع علامة صح):</label>
+                            <div id="break-checkboxes-${i}" class="checkbox-grid"></div>
+                        </div>
+                    </div>`; 
+                }
                 document.getElementById('dynamic-breaks-container').innerHTML = html;
                 for(let i=0; i<num; i++) {
-                    let bC = document.getElementById(`break-checkboxes-${i}`); if(classesList.length === 0) { bC.innerHTML = '<div style="color:var(--danger); font-size:12px;">أضف فصولاً من الجدول أولاً</div>'; continue; }
-                    let eC = (schoolConfig && schoolConfig.breaks[i]) ? schoolConfig.breaks[i].classes : []; classesList.forEach(cls => { let c = eC.includes(cls) ? 'checked' : ''; bC.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${cls}" class="b-chk-${i}" ${c}> ${cls}</label>`; });
+                    let bC = document.getElementById(`break-checkboxes-${i}`); 
+                    if(bC) {
+                        if(classesList.length === 0) { bC.innerHTML = '<div style="color:var(--danger); font-size:12px;">أضف فصولاً من الجدول أولاً</div>'; continue; }
+                        let eC = (schoolConfig && schoolConfig.breaks[i] && schoolConfig.breaks[i].classes) ? schoolConfig.breaks[i].classes : []; 
+                        classesList.forEach(cls => { let c = eC.includes(cls) ? 'checked' : ''; bC.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${cls}" class="b-chk-${i}" ${c}> ${cls}</label>`; });
+                    }
                 }
             } catch(e){}
         }
@@ -648,7 +672,14 @@
         function saveConfiguration() {
             try {
                 const numBreaks = parseInt(document.getElementById('cfg-num-breaks').value); let breaksArr = [];
-                for(let i=0; i<numBreaks; i++) { let after = parseInt(document.getElementById(`cfg-break-after-${i}`).value)||0; let dur = parseInt(document.getElementById(`cfg-break-dur-${i}`).value)||0; let sel = Array.from(document.querySelectorAll(`.b-chk-${i}:checked`)).map(cb => cb.value); breaksArr.push({ after: after, duration: dur, classes: sel }); }
+                for(let i=0; i<numBreaks; i++) { 
+                    let after = parseInt(document.getElementById(`cfg-break-after-${i}`).value)||0; 
+                    let dur = parseInt(document.getElementById(`cfg-break-dur-${i}`).value)||0; 
+                    let type = document.getElementById(`cfg-break-type-${i}`).value;
+                    let sel = [];
+                    if(type === 'custom') { sel = Array.from(document.querySelectorAll(`.b-chk-${i}:checked`)).map(cb => cb.value); }
+                    breaksArr.push({ after: after, duration: dur, type: type, classes: sel }); 
+                }
                 
                 let manualTimeOpts = { enabled: false, setAtReal: 0, targetTime: 0 };
                 if(document.getElementById('cfg-manual-time-enable').checked) {
@@ -668,7 +699,6 @@
             } catch (e) { alert("المساحة ممتلئة! يرجى تخفيف الصور الإعلانية."); }
         }
 
-        // --- التعديل الجذري لحل مشكلة الحروف المقطعة (إضافة ترميز BOM و UTF-8) ---
         function exportTeacherVersion() {
             try {
                 if(!schoolConfig || classesList.length === 0) { alert("قم بحفظ الإعدادات وتعبئة الجدول أولاً قبل التصدير!"); return; }
@@ -698,22 +728,12 @@
                 let dateStr = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
                 let filename = `جدول_${schoolNameSafe}_${dateStr}.html`;
                 
-                // الحل الجذري هنا: إضافة ختم UTF-8 BOM (\ufeff) وتحديد نوع الملف
                 let blob = new Blob(['\ufeff' + finalHtml], { type: 'text/html;charset=utf-8' }); 
                 let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
             } catch(e) { alert("حدث خطأ أثناء التصدير."); console.error(e); }
         }
 
-        function exportConfig() { 
-            try { 
-                const data = localStorage.getItem(STORAGE_KEY); if(!data) return alert("احفظ الإعدادات أولاً!"); 
-                // الحل الجذري في النسخة الاحتياطية أيضاً
-                const blob = new Blob(['\ufeff' + data], {type: "application/json;charset=utf-8"}); 
-                const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = "School_Backup.json"; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); 
-            } catch(e){} 
-        }
-        // -------------------------------------------------------------------------
-
+        function exportConfig() { try { const data = localStorage.getItem(STORAGE_KEY); if(!data) return alert("احفظ الإعدادات أولاً!"); const blob = new Blob(['\ufeff' + data], {type: "application/json;charset=utf-8"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = "School_Backup.json"; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); } catch(e){} }
         function importConfig() { try { document.getElementById('import-file-input').click(); } catch(e){} }
         function processImportFile(event) { try { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const content = e.target.result; JSON.parse(content); localStorage.setItem(STORAGE_KEY, content); alert("تم استيراد النظام بنجاح!"); location.reload(); } catch(err) { alert("ملف غير صالح!"); } }; reader.readAsText(file); event.target.value = ''; } catch(e){} }
         function factoryReset() { if(confirm("تحذير: سيتم مسح جميع الإعدادات والجداول! متأكد؟")) { try { localStorage.clear(); location.reload(); } catch(e){} } }
@@ -738,13 +758,32 @@
         function generateSchedule() {
             try {
                 dynamicSchedule = []; let current = timeToMinutes(schoolConfig.startTime), lessonCounter = 0; 
-                if (schoolConfig.assemblyDur > 0) { dynamicSchedule.push({ name: "الطابور الصباحي", start: current, end: current + schoolConfig.assemblyDur, startSecs: current * 60, endSecs: (current + schoolConfig.assemblyDur) * 60, type: 'assembly', lessonIdx: -1, isBreak: false }); current += schoolConfig.assemblyDur; }
-                for (let i = 1; i <= schoolConfig.totalLessons; i++) { let cDur = schoolConfig.useCustomDurs ? (schoolConfig.customDurs[i-1] || 45) : schoolConfig.lessonDur; dynamicSchedule.push({ name: "الحصة " + ordinals[i], start: current, end: current + cDur, startSecs: current * 60, endSecs: (current + cDur) * 60, type: 'lesson', lessonIdx: lessonCounter, isBreak: false }); current += cDur; lessonCounter++; if (schoolConfig.breaks) { schoolConfig.breaks.forEach((brk, idx) => { if (brk.after === i && brk.duration > 0) { dynamicSchedule.push({ name: "الفسحة " + ordinals[idx+1], start: current, end: current + brk.duration, startSecs: current * 60, endSecs: (current + brk.duration) * 60, type: 'break', lessonIdx: -1, isBreak: true, breakIndex: idx }); current += brk.duration; } }); } if (schoolConfig.prayerAfter === i && schoolConfig.prayerDur > 0) { dynamicSchedule.push({ name: "صلاة الظهر", start: current, end: current + schoolConfig.prayerDur, startSecs: current * 60, endSecs: (current + schoolConfig.prayerDur) * 60, type: 'prayer', lessonIdx: -1, isBreak: false }); current += schoolConfig.prayerDur; } }
+                if (schoolConfig.assemblyDur > 0) { dynamicSchedule.push({ name: "الطابور الصباحي", start: current, end: current + schoolConfig.assemblyDur, startSecs: current * 60, endSecs: (current + schoolConfig.assemblyDur) * 60, type: 'assembly', lessonIdx: -1, isBreak: false, isAllBreak: false }); current += schoolConfig.assemblyDur; }
+                
+                for (let i = 1; i <= schoolConfig.totalLessons; i++) { 
+                    let cDur = schoolConfig.useCustomDurs ? (schoolConfig.customDurs[i-1] || 45) : schoolConfig.lessonDur; 
+                    
+                    dynamicSchedule.push({ name: "الحصة " + ordinals[i], start: current, end: current + cDur, startSecs: current * 60, endSecs: (current + cDur) * 60, type: 'lesson', lessonIdx: lessonCounter, isBreak: false, isAllBreak: false }); 
+                    current += cDur; lessonCounter++; 
+                    
+                    if (schoolConfig.breaks) { 
+                        schoolConfig.breaks.forEach((brk, idx) => { 
+                            if (brk.after === i && brk.duration > 0) { 
+                                let isAll = brk.type === 'all';
+                                dynamicSchedule.push({ name: "الفسحة " + ordinals[idx+1], start: current, end: current + brk.duration, startSecs: current * 60, endSecs: (current + brk.duration) * 60, type: 'break', lessonIdx: -1, isBreak: true, breakIndex: idx, isAllBreak: isAll }); 
+                                current += brk.duration; 
+                            } 
+                        }); 
+                    } 
+                    if (schoolConfig.prayerAfter === i && schoolConfig.prayerDur > 0) { 
+                        dynamicSchedule.push({ name: "صلاة الظهر", start: current, end: current + schoolConfig.prayerDur, startSecs: current * 60, endSecs: (current + schoolConfig.prayerDur) * 60, type: 'prayer', lessonIdx: -1, isBreak: false, isAllBreak: false }); 
+                        current += schoolConfig.prayerDur; 
+                    } 
+                }
                 dynamicSchedule.sort((a, b) => a.start - b.start);
                 
                 let displaySchool = document.getElementById('display-school-name');
                 if(displaySchool) displaySchool.innerText = schoolConfig.schoolName || "اسم المدرسة";
-                
                 let mediaSchool = document.getElementById('media-school-name');
                 if(mediaSchool) mediaSchool.innerText = schoolConfig.schoolName || "اسم المدرسة";
                 
@@ -827,17 +866,37 @@
                 if (activeItem.type === 'prayer') { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--prayer);font-size:2vw;padding-top:2vh;">تقام الصلاة الآن</div>`; title.innerText = `وقت الصلاة`; return; }
                 
                 let displayIdx = activeItem.lessonIdx, isBreak = activeItem.isBreak; 
-                if (isBreak) { if (nextLessonOverride) displayIdx = nextLessonOverride.lessonIdx; else { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">انتهاء الحصص</div>`; title.innerText = `نهاية اليوم`; return; } }
+                if (isBreak) { 
+                    if (activeItem.isAllBreak) {
+                        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--break-color);font-size:3vw;padding-top:2vh;">🍔 وقت الفسحة للجميع</div>`; 
+                        title.innerText = `وقت الاستراحة`; 
+                        return;
+                    } else if (nextLessonOverride) {
+                        displayIdx = nextLessonOverride.lessonIdx; 
+                    } else { 
+                        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">انتهاء الحصص</div>`; 
+                        title.innerText = `نهاية اليوم`; 
+                        return; 
+                    } 
+                }
                 
                 let dayIdx = {0:0,1:1,2:2,3:3,4:4}[now.getDay()];
                 if(dayIdx === undefined) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">عطلة نهاية الأسبوع</div>`; title.innerText = `عطلة`; return; } 
                 
                 let breakClassesArray = (isBreak && schoolConfig.breaks[activeItem.breakIndex]) ? schoolConfig.breaks[activeItem.breakIndex].classes || [] : [];
                 let html = "", count = 0;
-                classesList.forEach(cls => { let pList = fullTimetable[dayIdx][cls]; if(pList && pList[displayIdx] && pList[displayIdx].trim() !== "") { count++; let inBreak = isBreak && breakClassesArray.includes(cls); html += inBreak ? `<div class="class-card in-break"><div class="c-name">${cls}</div><div class="c-subject">🍔 وقت الفسحة</div></div>` : `<div class="class-card"><div class="c-name">${cls}</div><div class="c-subject">${pList[displayIdx]}</div></div>`; } });
+                classesList.forEach(cls => { 
+                    let pList = fullTimetable[dayIdx][cls]; 
+                    if(pList && pList[displayIdx] && pList[displayIdx].trim() !== "") { 
+                        count++; 
+                        let inBreak = isBreak && breakClassesArray.includes(cls); 
+                        html += inBreak ? `<div class="class-card in-break"><div class="c-name">${cls}</div><div class="c-subject">🍔 وقت الفسحة</div></div>` : `<div class="class-card"><div class="c-name">${cls}</div><div class="c-subject">${pList[displayIdx]}</div></div>`; 
+                    } 
+                });
                 
                 if(count === 0) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:1.5vw;padding-top:2vh;">لا توجد بيانات للفصول</div>`; title.innerText = `جدول الفصول`; return; }
-                title.innerText = isBreak && nextLessonOverride ? `جدول الفصول - ${nextLessonOverride.name} (مستمرة)` : `جدول الفصول - ${activeItem.name}`; grid.innerHTML = html;
+                title.innerText = (isBreak && nextLessonOverride) ? `جدول الفصول - ${nextLessonOverride.name} (مستمرة)` : `جدول الفصول - ${activeItem.name}`; 
+                grid.innerHTML = html;
             } catch(e){}
         }
 
@@ -877,14 +936,34 @@
 
                 if (activeItem) {
                     let displayItem = activeItem;
-                    if (activeItem.isBreak) { nextLesson = dynamicSchedule.find(s => s.startSecs >= activeItem.endSecs && s.type === 'lesson'); if (nextLesson) displayItem = { name: nextLesson.name, startSecs: activeItem.startSecs, endSecs: nextLesson.endSecs, type: 'lesson', lessonIdx: nextLesson.lessonIdx }; }
+                    let showDualBreak = false;
+
+                    if (activeItem.isBreak) { 
+                        if (activeItem.isAllBreak) {
+                            displayItem = activeItem;
+                        } else {
+                            nextLesson = dynamicSchedule.find(s => s.startSecs >= activeItem.endSecs && s.type === 'lesson'); 
+                            if (nextLesson) {
+                                // الحل الجذري لمنع دمج الأوقات: استخدام مدة الحصة الأصلية
+                                let lessonDuration = nextLesson.endSecs - nextLesson.startSecs;
+                                displayItem = { 
+                                    name: nextLesson.name, 
+                                    startSecs: activeItem.startSecs, 
+                                    endSecs: activeItem.startSecs + lessonDuration, 
+                                    type: 'lesson', 
+                                    lessonIdx: nextLesson.lessonIdx 
+                                }; 
+                                showDualBreak = true;
+                            }
+                        }
+                    }
                     
                     let mp = document.getElementById('main-period'); if(mp) mp.innerText = displayItem.name; 
                     
                     updateLiveGrid(activeItem, nextLesson, now);
                     let totalDur = displayItem.endSecs - displayItem.startSecs, elapsed = totalSecs - displayItem.startSecs, remain = displayItem.endSecs - totalSecs;
                     
-                    let currentProgColor = activeItem.isBreak ? "var(--custom-break-color)" : "var(--custom-prog-color)";
+                    let currentProgColor = (activeItem.isBreak && activeItem.isAllBreak) ? "var(--custom-break-color)" : "var(--custom-prog-color)";
                     let pBar = document.getElementById('progress-bar');
                     if(pBar) { pBar.style.background = currentProgColor; pBar.style.width = `${(elapsed / totalDur) * 100}%`; }
                     
@@ -893,9 +972,9 @@
                     let mTimer = document.getElementById('main-timer'); if(mTimer) mTimer.innerText = `${String(Math.floor(remain / 60)).padStart(2, '0')}:${String(remain % 60).padStart(2, '0')}`;
                     
                     let bAlertBar = document.getElementById('break-alert-bar');
-                    if (activeItem.isBreak) { 
-                        let bAlertTitle = document.getElementById('break-alert-title'); if(bAlertTitle) bAlertTitle.innerText = `🔔 ${activeItem.name} جارية الآن`; 
-                        let bAlertTimer = document.getElementById('break-alert-timer'); if(bAlertTimer) bAlertTimer.innerText = `متبقي: ${String(Math.floor((activeItem.endSecs - totalSecs) / 60)).padStart(2, '0')}:${String((activeItem.endSecs - totalSecs) % 60).padStart(2, '0')}`; 
+                    if (showDualBreak) { 
+                        let bAlertTitle = document.getElementById('break-alert-title'); if(bAlertTitle) bAlertTitle.innerText = `🔔 ${activeItem.name} جارية لبعض الفصول`; 
+                        let bAlertTimer = document.getElementById('break-alert-timer'); if(bAlertTimer) bAlertTimer.innerText = `متبقي للفسحة: ${String(Math.floor((activeItem.endSecs - totalSecs) / 60)).padStart(2, '0')}:${String((activeItem.endSecs - totalSecs) % 60).padStart(2, '0')}`; 
                         if(bAlertBar) bAlertBar.classList.remove('hidden'); 
                     } else {
                         if(bAlertBar) bAlertBar.classList.add('hidden');
