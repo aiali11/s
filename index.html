@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية الشامل V51 (النسخة الذهبية)</title>
+    <title>نظام الإدارة المدرسية الشامل V52 (الإصدار الألماسي)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -233,7 +233,7 @@
 
     <div id="settings-container">
         <div class="settings-card">
-            <h2>⚙️ لوحة التحكم - الإصدار V51 (النسخة الذهبية)</h2>
+            <h2>⚙️ لوحة التحكم - الإصدار V52 (الإصدار الألماسي 💎)</h2>
             <div class="form-row">
                 <div class="form-group" style="flex: 2;"><label>المدرسة:</label><input type="text" id="cfg-school" placeholder="اكتب اسم المدرسة هنا..."></div>
                 <div class="form-group" style="flex: 1.5;">
@@ -342,7 +342,7 @@
             </div>
             <div id="custom-dur-wrapper"><div style="width: 100%; color: var(--primary); font-weight: bold; margin-bottom: 10px;">حدد مدة كل حصة بالدقائق:</div><div id="custom-dur-grid" style="display: flex; flex-wrap: wrap; width: 100%; gap: 10px;"></div></div>
 
-            <div class="section-title">توزيع الفسح (نظام المسارات الذكي)</div>
+            <div class="section-title">توزيع الفسح (الانفصال البصري 💎)</div>
             <div class="form-row"><div class="form-group"><label>كم عدد الفسح في مدرستك؟</label><select id="cfg-num-breaks" onchange="renderDynamicBreaksUI()"><option value="0">بدون فسحة</option><option value="1">فسحة واحدة</option><option value="2" selected>فسحتين</option><option value="3">3 فسح</option></select></div></div>
             <div id="dynamic-breaks-container"></div>
             
@@ -464,7 +464,7 @@
             </div>
             <div class="footer-bar">
                 <div id="display-principal-name" style="flex:1;"></div>
-                <div style="flex:1; text-align:center;">نظام الإدارة المدرسية V51</div>
+                <div style="flex:1; text-align:center;">نظام الإدارة المدرسية V52 💎</div>
                 <div style="flex:1; text-align:left;" id="settings-btn-container">
                     <button class="btn" style="padding: 2px 10px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);" onclick="openSettings()">⚙️ إعدادات النظام</button>
                 </div>
@@ -473,7 +473,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'SMART_SCHOOL_V51_GOLDEN'; 
+        const STORAGE_KEY = 'SMART_SCHOOL_V52_DIAMOND'; 
         let systemActive = false, schoolConfig = null, dynamicSchedule = [];
         let classesList = [], fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
         let teachersRoster = []; 
@@ -605,7 +605,6 @@
             for(let d=0; d<5; d++) { fullTimetable[d] = {}; }
         }
 
-        // --- سجل المعلمين (V50/V51) ---
         function addTeacherToRoster() {
             let name = document.getElementById('new-teacher-name').value.trim();
             if(name && !teachersRoster.includes(name)) {
@@ -636,7 +635,6 @@
             container.innerHTML = html;
         }
 
-        // --- المساعد الشخصي (V51) ---
         function initTeacherAssistant() {
             let savedName = localStorage.getItem('SMART_SCHOOL_MY_NAME');
             if (savedName) {
@@ -738,7 +736,6 @@
             generateSchedule();
         }
 
-        // --- الفسح التبادلية والمسارات (V51) ---
         function toggleBreakType(idx) {
             let type = document.getElementById(`cfg-break-type-${idx}`).value;
             let classesContainer = document.getElementById(`break-classes-container-${idx}`);
@@ -778,7 +775,7 @@
                                 <select id="cfg-break-type-${i}" onchange="toggleBreakType(${i})">
                                     <option value="all" ${eT === 'all' ? 'selected' : ''}>شاملة (تتوقف جميع الحصص)</option>
                                     <option value="custom" ${eT === 'custom' ? 'selected' : ''}>مخصصة عادية (لفصول محددة فقط)</option>
-                                    <option value="split" ${eT === 'split' ? 'selected' : ''}>تبادلية 🌟 (تتداخل مع الحصة التالية كمسارات)</option>
+                                    <option value="split" ${eT === 'split' ? 'selected' : ''}>تبادلية 💎 (تتداخل مع الحصة كانفصال بصري)</option>
                                 </select>
                             </div>
                         </div>
@@ -791,7 +788,7 @@
                             <div id="break-split-g1-${i}" class="checkbox-grid" style="margin-bottom:10px;"></div>
                             <label style="color:var(--success);">المسار الثاني (يدرسون أولاً 📚 ثم يأخذون الفسحة 🍔):</label>
                             <div id="break-split-g2-${i}" class="checkbox-grid"></div>
-                            <div style="font-size:11px; color:var(--text-muted); margin-top:5px;">* النظام سيقوم أوتوماتيكياً بدمج وقت هذه الفسحة مع وقت الحصة التي تليها ليصنع كتلة زمنية واحدة تتبادل فيها هذه الفصول.</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:5px;">* النظام سيقرأ وقت الحصة العادي 45د ثم الفسحة 15د، ولكنه سيطبق التبادل بذكاء في الجدول السفلي.</div>
                         </div>
                     </div>`; 
                 }
@@ -979,37 +976,80 @@
                 for (let i = 1; i <= schoolConfig.totalLessons; i++) { 
                     let cDur = schoolConfig.useCustomDurs ? (schoolConfig.customDurs[i-1] || 45) : schoolConfig.lessonDur; 
                     
-                    // السحر المزدوج: فحص هل توجد فسحة تبادلية متداخلة مع هذه الحصة
                     let splitBreak = schoolConfig.breaks && schoolConfig.breaks.find(b => b.after === i - 1 && b.type === 'split');
                     
                     if (splitBreak) {
-                        let combinedDur = cDur + splitBreak.duration;
+                        // الحصة الرسمية (45 دقيقة مثلاً)
                         dynamicSchedule.push({ 
-                            name: "الحصة " + ordinals[i] + " (مسارات الفسح)", 
+                            name: "الحصة " + ordinals[i], 
                             start: current, 
-                            end: current + combinedDur, 
+                            end: current + cDur, 
                             startSecs: current * 60, 
-                            endSecs: (current + combinedDur) * 60, 
-                            type: 'split_lesson', 
+                            endSecs: (current + cDur) * 60, 
+                            type: 'lesson', 
                             lessonIdx: lessonCounter, 
-                            breakDurSecs: splitBreak.duration * 60, 
-                            lessonDurSecs: cDur * 60,
-                            group1: splitBreak.group1 || [],
-                            group2: splitBreak.group2 || []
+                            isBreak: false, 
+                            isAllBreak: false,
+                            hasSplitBreak: true,
+                            splitGroup1: splitBreak.group1 || [],
+                            splitGroup2: splitBreak.group2 || [],
+                            splitDurSecs: splitBreak.duration * 60
                         }); 
-                        current += combinedDur; 
+                        current += cDur; 
+                        
+                        // الفسحة التبادلية الرسمية التي تليها
+                        let sIdx = schoolConfig.breaks.indexOf(splitBreak);
+                        dynamicSchedule.push({
+                            name: "الفسحة " + ordinals[sIdx+1],
+                            start: current, 
+                            end: current + splitBreak.duration,
+                            startSecs: current * 60, 
+                            endSecs: (current + splitBreak.duration) * 60,
+                            type: 'break',
+                            lessonIdx: lessonCounter, // يشير لنفس الحصة للمسار الثاني
+                            isBreak: true,
+                            breakIndex: sIdx,
+                            isAllBreak: false,
+                            isSplitBreak: true,
+                            splitGroup1: splitBreak.group1 || [],
+                            splitGroup2: splitBreak.group2 || []
+                        });
+                        current += splitBreak.duration;
                         lessonCounter++;
                     } else {
-                        dynamicSchedule.push({ name: "الحصة " + ordinals[i], start: current, end: current + cDur, startSecs: current * 60, endSecs: (current + cDur) * 60, type: 'lesson', lessonIdx: lessonCounter, isBreak: false, isAllBreak: false }); 
+                        dynamicSchedule.push({ 
+                            name: "الحصة " + ordinals[i], 
+                            start: current, 
+                            end: current + cDur, 
+                            startSecs: current * 60, 
+                            endSecs: (current + cDur) * 60, 
+                            type: 'lesson', 
+                            lessonIdx: lessonCounter, 
+                            isBreak: false, 
+                            isAllBreak: false,
+                            hasSplitBreak: false
+                        }); 
                         current += cDur; lessonCounter++; 
                     }
                     
-                    // فحص الفسح العادية (التي تأتي بعد هذه الحصة)
+                    // الفسح العادية (غير التبادلية)
                     if (schoolConfig.breaks) { 
                         schoolConfig.breaks.forEach((brk, idx) => { 
                             if (brk.after === i && brk.duration > 0 && brk.type !== 'split') { 
                                 let isAll = brk.type === 'all';
-                                dynamicSchedule.push({ name: "الفسحة " + ordinals[idx+1], start: current, end: current + brk.duration, startSecs: current * 60, endSecs: (current + brk.duration) * 60, type: 'break', lessonIdx: -1, isBreak: true, breakIndex: idx, isAllBreak: isAll }); 
+                                dynamicSchedule.push({ 
+                                    name: "الفسحة " + ordinals[idx+1], 
+                                    start: current, 
+                                    end: current + brk.duration, 
+                                    startSecs: current * 60, 
+                                    endSecs: (current + brk.duration) * 60, 
+                                    type: 'break', 
+                                    lessonIdx: -1, 
+                                    isBreak: true, 
+                                    breakIndex: idx, 
+                                    isAllBreak: isAll,
+                                    isSplitBreak: false
+                                }); 
                                 current += brk.duration; 
                             } 
                         }); 
@@ -1033,7 +1073,7 @@
                 if(container) {
                     container.innerHTML = '';
                     dynamicSchedule.forEach((item, index) => { 
-                        let extraClass = item.type === 'split_lesson' ? 'split-item' : '';
+                        let extraClass = (item.hasSplitBreak || item.isSplitBreak) ? 'split-item' : '';
                         container.innerHTML += `<div class="schedule-item ${item.type}-item ${extraClass}" id="item-${index}"><span>${item.name}</span> <span style="font-family: monospace;">${formatTime(item.start)} - ${formatTime(item.end)}</span></div>`; 
                     });
                 }
@@ -1125,69 +1165,81 @@
                 let myCurrentClass = null;
                 let myNextClassObj = null;
 
-                if (activeItem && (activeItem.type === 'lesson' || activeItem.type === 'split_lesson')) {
+                // تحديد الحصة الحالية مع مراعاة الانفصال البصري للمسارات
+                if (activeItem && (activeItem.type === 'lesson' || activeItem.type === 'break')) {
                     let elapsed = totalSecs - activeItem.startSecs;
-                    classesList.forEach(cls => {
-                        let pList = fullTimetable[dayIdx][cls];
-                        if (pList && pList[activeItem.lessonIdx]) {
-                            let parts = pList[activeItem.lessonIdx].split('::');
-                            if (parts[1] === currentPersonalTeacher) {
-                                let inBreak = false;
-                                if (activeItem.type === 'split_lesson') {
-                                    if (activeItem.group1.includes(cls) && elapsed < activeItem.breakDurSecs) inBreak = true;
-                                    if (activeItem.group2.includes(cls) && elapsed >= activeItem.lessonDurSecs) inBreak = true;
-                                }
-                                if (!inBreak) myCurrentClass = { cls: cls, subj: parts[0] };
-                            }
-                        }
-                    });
-                }
+                    let targetLessonIdx = activeItem.type === 'lesson' ? activeItem.lessonIdx : (activeItem.isSplitBreak ? activeItem.lessonIdx : -1);
 
-                let foundNext = false;
-                dynamicSchedule.forEach(item => {
-                    if (!foundNext) {
-                        if (item.type === 'lesson' && item.startSecs > totalSecs) {
-                            classesList.forEach(cls => {
-                                let pList = fullTimetable[dayIdx][cls];
-                                if (pList && pList[item.lessonIdx]) {
-                                    let parts = pList[item.lessonIdx].split('::');
-                                    if (parts[1] === currentPersonalTeacher) {
-                                        myNextClassObj = { cls: cls, subj: parts[0], item: item, actualStart: item.startSecs };
-                                        foundNext = true;
-                                    }
-                                }
-                            });
-                        } else if (item.type === 'split_lesson') {
-                            if (item.startSecs > totalSecs) {
-                                classesList.forEach(cls => {
-                                    let pList = fullTimetable[dayIdx][cls];
-                                    if (pList && pList[item.lessonIdx]) {
-                                        let parts = pList[item.lessonIdx].split('::');
-                                        if (parts[1] === currentPersonalTeacher) {
-                                            let actualStart = item.group1.includes(cls) ? item.startSecs + item.breakDurSecs : item.startSecs;
-                                            myNextClassObj = { cls: cls, subj: parts[0], item: item, actualStart: actualStart };
-                                            foundNext = true;
+                    if (targetLessonIdx !== -1) {
+                        classesList.forEach(cls => {
+                            let pList = fullTimetable[dayIdx][cls];
+                            if (pList && pList[targetLessonIdx]) {
+                                let parts = pList[targetLessonIdx].split('::');
+                                if (parts[1] === currentPersonalTeacher) {
+                                    let inBreak = false;
+                                    if (activeItem.type === 'lesson' && activeItem.hasSplitBreak) {
+                                        if (activeItem.splitGroup1.includes(cls) && elapsed < activeItem.splitDurSecs) inBreak = true;
+                                    } else if (activeItem.type === 'break' && activeItem.isSplitBreak) {
+                                        if (activeItem.splitGroup2.includes(cls)) inBreak = true;
+                                    } else if (activeItem.type === 'break' && !activeItem.isSplitBreak) {
+                                        if (activeItem.isAllBreak) inBreak = true;
+                                        else {
+                                            let bClasses = schoolConfig.breaks[activeItem.breakIndex].classes || [];
+                                            if (bClasses.includes(cls)) inBreak = true;
                                         }
                                     }
-                                });
-                            } else if (totalSecs >= item.startSecs && totalSecs < item.endSecs) {
-                                let elapsed = totalSecs - item.startSecs;
-                                classesList.forEach(cls => {
-                                    let pList = fullTimetable[dayIdx][cls];
-                                    if (pList && pList[item.lessonIdx]) {
-                                        let parts = pList[item.lessonIdx].split('::');
-                                        if (parts[1] === currentPersonalTeacher) {
-                                            if (item.group1.includes(cls) && elapsed < item.breakDurSecs) {
-                                                myNextClassObj = { cls: cls, subj: parts[0], item: item, actualStart: item.startSecs + item.breakDurSecs };
+                                    if (!inBreak) myCurrentClass = { cls: cls, subj: parts[0] };
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // تحديد الحصة القادمة بدقة 
+                let foundNext = false;
+                for (let i = 0; i < dynamicSchedule.length; i++) {
+                    let item = dynamicSchedule[i];
+                    if (foundNext) break;
+
+                    let targetLessonIdx = item.type === 'lesson' ? item.lessonIdx : (item.isSplitBreak ? item.lessonIdx : -1);
+
+                    if (targetLessonIdx !== -1) {
+                        classesList.forEach(cls => {
+                            let pList = fullTimetable[dayIdx][cls];
+                            if (pList && pList[targetLessonIdx]) {
+                                let parts = pList[targetLessonIdx].split('::');
+                                if (parts[1] === currentPersonalTeacher) {
+                                    if (item.type === 'lesson' && item.hasSplitBreak) {
+                                        if (item.splitGroup1.includes(cls)) {
+                                            let actualStart = item.startSecs + item.splitDurSecs;
+                                            if (actualStart > totalSecs && !foundNext) {
+                                                myNextClassObj = { cls: cls, subj: parts[0], actualStart: actualStart, item: item };
+                                                foundNext = true;
+                                            }
+                                        } else {
+                                            if (item.startSecs > totalSecs && !foundNext) {
+                                                myNextClassObj = { cls: cls, subj: parts[0], actualStart: item.startSecs, item: item };
                                                 foundNext = true;
                                             }
                                         }
+                                    } else if (item.type === 'break' && item.isSplitBreak) {
+                                        if (item.splitGroup1.includes(cls)) {
+                                            if (item.startSecs > totalSecs && !foundNext) {
+                                                myNextClassObj = { cls: cls, subj: parts[0], actualStart: item.startSecs, item: item };
+                                                foundNext = true;
+                                            }
+                                        }
+                                    } else if (item.type === 'lesson' && !item.hasSplitBreak) {
+                                        if (item.startSecs > totalSecs && !foundNext) {
+                                            myNextClassObj = { cls: cls, subj: parts[0], actualStart: item.startSecs, item: item };
+                                            foundNext = true;
+                                        }
                                     }
-                                });
+                                }
                             }
-                        }
+                        });
                     }
-                });
+                }
 
                 let html = `<span style="margin-left: 10px;">👨‍🏫 أهلاً بك، <b>${currentPersonalTeacher}</b></span>`;
                 
@@ -1229,32 +1281,55 @@
                 let dayIdx = {0:0,1:1,2:2,3:3,4:4}[now.getDay()];
                 if(dayIdx === undefined) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">عطلة نهاية الأسبوع</div>`; title.innerText = `عطلة`; return; } 
 
-                if (activeItem.type === 'split_lesson') {
-                    let elapsed = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) - activeItem.startSecs;
+                // منطق الانفصال البصري - عرض الجدول السفلي وقت الحصة
+                if (activeItem.type === 'lesson' && activeItem.hasSplitBreak) {
                     title.innerText = `جدول الفصول - ${activeItem.name}`;
-                    
                     let html = "", count = 0;
-                    classesList.forEach(cls => { 
-                        let pList = fullTimetable[dayIdx][cls]; 
-                        if(pList && pList[displayIdx] && pList[displayIdx].trim() !== "") { 
-                            count++; 
+                    classesList.forEach(cls => {
+                        let pList = fullTimetable[dayIdx][cls];
+                        if(pList && pList[displayIdx] && pList[displayIdx].trim() !== "") {
+                            count++;
                             let inBreak = false;
-                            if (activeItem.group1.includes(cls) && elapsed < activeItem.breakDurSecs) inBreak = true;
-                            if (activeItem.group2.includes(cls) && elapsed >= activeItem.lessonDurSecs) inBreak = true;
+                            let elapsed = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) - activeItem.startSecs;
+                            if (activeItem.splitGroup1.includes(cls) && elapsed < activeItem.splitDurSecs) inBreak = true;
                             
                             let parts = pList[displayIdx].split('::');
                             let subjDisplay = parts[0] || '';
                             let teacherDisplay = parts[1] ? `<div style="font-size:0.8vw; color:var(--text-muted); margin-top:2px;">${parts[1]}</div>` : '';
 
-                            html += inBreak ? `<div class="class-card in-break"><div class="c-name">${cls}</div><div class="c-subject">🍔 وقت الفسحة</div></div>` : `<div class="class-card"><div class="c-name">${cls}</div><div class="c-subject">${subjDisplay}${teacherDisplay}</div></div>`; 
-                        } 
+                            html += inBreak ? `<div class="class-card in-break"><div class="c-name">${cls}</div><div class="c-subject">🍔 وقت الفسحة</div></div>` : `<div class="class-card"><div class="c-name">${cls}</div><div class="c-subject">${subjDisplay}${teacherDisplay}</div></div>`;
+                        }
+                    });
+                    if(count === 0) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:1.5vw;padding-top:2vh;">لا توجد بيانات للفصول</div>`; return; }
+                    grid.innerHTML = html;
+                    return;
+                }
+
+                // منطق الانفصال البصري - عرض الجدول السفلي وقت الفسحة
+                if (activeItem.type === 'break' && activeItem.isSplitBreak) {
+                    title.innerText = `جدول الفصول - ${activeItem.name}`;
+                    displayIdx = activeItem.lessonIdx;
+                    let html = "", count = 0;
+                    classesList.forEach(cls => {
+                        let pList = fullTimetable[dayIdx][cls];
+                        if(pList && pList[displayIdx] && pList[displayIdx].trim() !== "") {
+                            count++;
+                            let inBreak = false;
+                            if (activeItem.splitGroup2.includes(cls)) inBreak = true;
+                            
+                            let parts = pList[displayIdx].split('::');
+                            let subjDisplay = parts[0] || '';
+                            let teacherDisplay = parts[1] ? `<div style="font-size:0.8vw; color:var(--text-muted); margin-top:2px;">${parts[1]}</div>` : '';
+
+                            html += inBreak ? `<div class="class-card in-break"><div class="c-name">${cls}</div><div class="c-subject">🍔 وقت الفسحة</div></div>` : `<div class="class-card"><div class="c-name">${cls}</div><div class="c-subject">${subjDisplay}${teacherDisplay}</div></div>`;
+                        }
                     });
                     if(count === 0) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:1.5vw;padding-top:2vh;">لا توجد بيانات للفصول</div>`; return; }
                     grid.innerHTML = html;
                     return;
                 }
                 
-                if (isBreak) { 
+                if (isBreak && !activeItem.isSplitBreak) { 
                     if (activeItem.isAllBreak) {
                         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--break-color);font-size:3vw;padding-top:2vh;">🍔 وقت الفسحة للجميع</div>`; 
                         title.innerText = `وقت الاستراحة`; 
@@ -1330,9 +1405,8 @@
                 if (activeItem) {
                     let displayItem = activeItem;
                     let showDualBreak = false;
-                    let isSplitBlock = activeItem.type === 'split_lesson';
 
-                    if (activeItem.isBreak) { 
+                    if (activeItem.isBreak && !activeItem.isSplitBreak) { 
                         if (activeItem.isAllBreak) {
                             displayItem = activeItem;
                         } else {
@@ -1359,13 +1433,20 @@
                     let mTimer = document.getElementById('main-timer'); if(mTimer) mTimer.innerText = `${String(Math.floor(remain / 60)).padStart(2, '0')}:${String(remain % 60).padStart(2, '0')}`;
                     
                     let bAlertBar = document.getElementById('break-alert-bar');
-                    if (showDualBreak) { 
-                        let bAlertTitle = document.getElementById('break-alert-title'); if(bAlertTitle) bAlertTitle.innerText = `🔔 ${activeItem.name} جارية لبعض الفصول`; 
-                        let bAlertTimer = document.getElementById('break-alert-timer'); if(bAlertTimer) bAlertTimer.innerText = `متبقي للفسحة: ${String(Math.floor((activeItem.endSecs - totalSecs) / 60)).padStart(2, '0')}:${String((activeItem.endSecs - totalSecs) % 60).padStart(2, '0')}`; 
-                        if(bAlertBar) bAlertBar.classList.remove('hidden'); 
-                    } else if (isSplitBlock) {
-                        let bAlertTitle = document.getElementById('break-alert-title'); if(bAlertTitle) bAlertTitle.innerText = `🔔 مسارات الفسحة التبادلية جارية الآن`; 
-                        let bAlertTimer = document.getElementById('break-alert-timer'); if(bAlertTimer) bAlertTimer.innerText = ``; 
+                    let bAlertTitle = document.getElementById('break-alert-title');
+                    let bAlertTimer = document.getElementById('break-alert-timer');
+
+                    if (activeItem.type === 'lesson' && activeItem.hasSplitBreak && elapsed < activeItem.splitDurSecs) {
+                        if(bAlertTitle) bAlertTitle.innerText = `🔔 مسارات الفسحة التبادلية جارية الآن (المجموعة الأولى في الفسحة)`;
+                        if(bAlertTimer) bAlertTimer.innerText = `متبقي: ${String(Math.floor((activeItem.splitDurSecs - elapsed) / 60)).padStart(2, '0')}:${String((activeItem.splitDurSecs - elapsed) % 60).padStart(2, '0')}`;
+                        if(bAlertBar) bAlertBar.classList.remove('hidden');
+                    } else if (activeItem.type === 'break' && activeItem.isSplitBreak) {
+                        if(bAlertTitle) bAlertTitle.innerText = `🔔 مسارات الفسحة التبادلية جارية الآن (المجموعة الثانية في الفسحة)`;
+                        if(bAlertTimer) bAlertTimer.innerText = `متبقي: ${String(Math.floor(remain / 60)).padStart(2, '0')}:${String(remain % 60).padStart(2, '0')}`;
+                        if(bAlertBar) bAlertBar.classList.remove('hidden');
+                    } else if (showDualBreak) {
+                        if(bAlertTitle) bAlertTitle.innerText = `🔔 ${activeItem.name} جارية لبعض الفصول`;
+                        if(bAlertTimer) bAlertTimer.innerText = `متبقي للفسحة: ${String(Math.floor(remain / 60)).padStart(2, '0')}:${String(remain % 60).padStart(2, '0')}`;
                         if(bAlertBar) bAlertBar.classList.remove('hidden');
                     } else {
                         if(bAlertBar) bAlertBar.classList.add('hidden');
