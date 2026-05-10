@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية الشامل V52 (الإصدار الألماسي)</title>
+    <title>نظام الإدارة المدرسية الشامل V53 (نسخة المستثمر)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,8 +19,11 @@
             
             --period-name-size: 3.5vw; --timer-size: 4.5vw; --progress-height: 1.5vh;
             --custom-prog-color: var(--primary); --custom-break-color: #10b981; 
+            --footer-principal-size: 1vw; --footer-principal-color: #ffffff;
         }
-        body.light-mode {
+
+        /* --- THEMES --- */
+        body[data-theme="light"] {
             --bg-color: #f1f5f9; --card-bg: #ffffff; --primary: #0284c7;
             --accent: #d97706; --danger: #dc2626; --success: #16a34a;
             --prayer: #b45309; --text: #0f172a; --text-muted: #475569;
@@ -30,6 +33,39 @@
             --ticker-bg: #f8fafc; --input-bg: #ffffff;
             --input-border: #cbd5e1; --modal-bg: rgba(241, 245, 249, 0.98);
             --clock-face: #f8fafc; --clock-border: #0284c7; --hand-color: #0f172a;
+        }
+        body[data-theme="national"] {
+            --bg-color: #064e3b; --card-bg: #065f46; --primary: #34d399;
+            --accent: #ffffff; --danger: #ef4444; --success: #10b981;
+            --prayer: #fde047; --text: #ecfdf5; --text-muted: #a7f3d0;
+            --break-color: #6ee7b7; --border-color: rgba(255,255,255,0.2);
+            --header-bg: rgba(6, 78, 59, 0.95); --item-bg: rgba(0,0,0,0.2);
+            --progress-bg: #022c22; --class-card-bg: #064e3b;
+            --ticker-bg: #065f46; --input-bg: #064e3b;
+            --input-border: #047857; --modal-bg: rgba(6, 78, 59, 0.98);
+            --clock-face: #065f46; --clock-border: #34d399; --hand-color: #ffffff;
+        }
+        body[data-theme="founding"] {
+            --bg-color: #451a03; --card-bg: #78350f; --primary: #d97706;
+            --accent: #fde68a; --danger: #ef4444; --success: #84cc16;
+            --prayer: #fcd34d; --text: #fef3c7; --text-muted: #fcd34d;
+            --break-color: #a3e635; --border-color: rgba(253, 230, 138, 0.2);
+            --header-bg: rgba(69, 26, 3, 0.95); --item-bg: rgba(0,0,0,0.3);
+            --progress-bg: #280f02; --class-card-bg: #451a03;
+            --ticker-bg: #78350f; --input-bg: #451a03;
+            --input-border: #92400e; --modal-bg: rgba(69, 26, 3, 0.98);
+            --clock-face: #78350f; --clock-border: #d97706; --hand-color: #fde68a;
+        }
+        body[data-theme="ramadan"] {
+            --bg-color: #1e1b4b; --card-bg: #312e81; --primary: #c084fc;
+            --accent: #fcd34d; --danger: #f43f5e; --success: #2dd4bf;
+            --prayer: #fde047; --text: #e0e7ff; --text-muted: #a5b4fc;
+            --break-color: #2dd4bf; --border-color: rgba(255,255,255,0.1);
+            --header-bg: rgba(30, 27, 75, 0.95); --item-bg: rgba(0,0,0,0.3);
+            --progress-bg: #111827; --class-card-bg: #1e1b4b;
+            --ticker-bg: #312e81; --input-bg: #1e1b4b;
+            --input-border: #4338ca; --modal-bg: rgba(30, 27, 75, 0.98);
+            --clock-face: #312e81; --clock-border: #c084fc; --hand-color: #fcd34d;
         }
         
         /* Scrollbar Fix for TV Box & Desktop */
@@ -50,11 +86,12 @@
         .btn-danger { background: var(--danger); color: white; }
         input[type="text"], input[type="number"], input[type="time"], input[type="date"], select, input[type="color"] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); font-family: 'Cairo'; font-size: 14px; box-sizing: border-box; font-weight: bold;}
         input:focus, select:focus { outline: none; border-color: var(--primary); }
+        input:disabled, select:disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
         input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--primary); }
         
         #settings-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: flex-start; padding: 20px; box-sizing: border-box; }
         .settings-card { background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); width: 100%; max-width: 800px; border: 1px solid var(--primary); margin: auto; }
-        .settings-card h2 { color: var(--primary); text-align: center; margin-top: 0; font-weight: 900; }
+        .settings-card h2 { color: var(--primary); text-align: center; margin-top: 0; font-weight: 900; user-select: none; cursor: default;}
         .form-row { display: flex; gap: 15px; margin-bottom: 12px; flex-wrap: wrap;}
         .form-group { flex: 1; min-width: 200px; margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--text-muted); font-size: 14px;}
@@ -92,7 +129,7 @@
         
         /* الشريط العائم للمعلم */
         #teacher-banner { background: rgba(30, 41, 59, 0.95); border-bottom: 2px solid var(--accent); color: white; text-align: center; padding: 10px; font-size: 1.1vw; font-weight: bold; display: none; z-index: 100;}
-        body.light-mode #teacher-banner { background: rgba(255, 255, 255, 0.95); color: var(--text); border-bottom: 2px solid var(--primary);}
+        body[data-theme="light"] #teacher-banner { background: rgba(255, 255, 255, 0.95); color: var(--text); border-bottom: 2px solid var(--primary);}
         
         #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; padding: 20px; text-align: center;}
         #start-btn { background: var(--primary); color: #ffffff; border: none; padding: 20px 50px; border-radius: 15px; font-size: 24px; font-family: 'Cairo'; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);}
@@ -103,7 +140,6 @@
         .logo-right { position: absolute; top: 50%; transform: translateY(-50%); right: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; }
         .logo-left { position: absolute; top: 50%; transform: translateY(-50%); left: 15px; height: 80%; display: flex; justify-content: center; align-items: center; z-index: 10; gap: 10px;}
         .education-logo-img { max-height: 100%; width: auto; object-fit: contain; background-color: rgba(255, 255, 255, 0.9); padding: 5px 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .btn-theme-toggle { background: var(--bg-color); color: var(--text); border: 2px solid var(--primary); padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 1vw; font-family: 'Cairo'; font-weight: bold; display: flex; align-items: center; gap: 5px;}
         .school-info h1 { margin: 0; font-size: 2vw; color: var(--accent); font-weight: 900;}
         
         .clocks-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin-top: 5px; }
@@ -123,7 +159,7 @@
         .schedule-item.active { background: var(--primary); color: #ffffff; border: 2px solid var(--bg-color); transform: scale(1.02); }
         .schedule-item.passed { opacity: 0.4; text-decoration: line-through; }
         .schedule-item.break-item { color: var(--success); }
-        body.light-mode .schedule-item.break-item { color: var(--break-color); }
+        body[data-theme="light"] .schedule-item.break-item { color: var(--break-color); }
         .schedule-item.prayer-item { color: var(--prayer); border: 1px dashed var(--prayer);}
         .schedule-item.split-item { color: var(--accent); border-right: 3px solid var(--accent); }
         
@@ -140,7 +176,7 @@
         
         .progress-stats { display: flex; justify-content: space-between; font-size: 1.1vw; color: var(--text-muted); font-weight: bold;}
         .break-alert-bar { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.1)); border: 1px solid var(--break-color); border-radius: 10px; padding: 8px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; color: var(--success); font-weight: bold; font-size: 1.5vw; animation: pulse 2s infinite; }
-        body.light-mode .break-alert-bar { color: var(--break-color); background: linear-gradient(90deg, rgba(5, 150, 105, 0.1), rgba(5, 150, 105, 0.2), rgba(5, 150, 105, 0.1));}
+        body[data-theme="light"] .break-alert-bar { color: var(--break-color); background: linear-gradient(90deg, rgba(5, 150, 105, 0.1), rgba(5, 150, 105, 0.2), rgba(5, 150, 105, 0.1));}
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } 50% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); } 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } }
         
         .live-grid-container { flex: 1; background: var(--card-bg); border-radius: 15px; padding: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
@@ -175,7 +211,6 @@
             .app-padding { padding: 10px; overflow: visible;}
             header { padding: 15px 10px; padding-top: 50px;} 
             .logo-right, .logo-left { height: 40px; top: 15px; transform: none;}
-            .btn-theme-toggle { font-size: 14px; padding: 4px 8px; }
             .school-info h1 { font-size: 5vw; text-align: center; margin-top: 10px;}
             .clocks-container { flex-direction: column; gap: 10px; }
             .current-time { font-size: 12vw; }
@@ -209,7 +244,7 @@
         }
     </style>
 </head>
-<body>
+<body data-theme="default">
 
     <input type="file" id="edu-logo-input" accept="image/*" style="display: none;" onchange="processImageUpload(event, 'edu')">
     <input type="file" id="school-logo-input" accept="image/*" style="display: none;" onchange="processImageUpload(event, 'school')">
@@ -233,18 +268,37 @@
 
     <div id="settings-container">
         <div class="settings-card">
-            <h2>⚙️ لوحة التحكم - الإصدار V52 (الإصدار الألماسي 💎)</h2>
+            <h2 ondblclick="secretUnlock()" title="اضغط مرتين هنا لفتح القفل السري للنسخة">⚙️ لوحة التحكم - الإصدار V53 (النسخة التجارية 🚀)</h2>
+            
             <div class="form-row">
                 <div class="form-group" style="flex: 2;"><label>المدرسة:</label><input type="text" id="cfg-school" placeholder="اكتب اسم المدرسة هنا..."></div>
                 <div class="form-group" style="flex: 1.5;">
                     <label>المدير / الإدارة:</label>
                     <div style="display: flex; gap: 5px;">
-                        <select id="cfg-principal-title" style="flex: 1; padding: 10px;"><option value="مدير المدرسة">مدير المدرسة</option><option value="مديرة المدرسة">مديرة المدرسة</option><option value="مدير المجمع">مدير المجمع</option><option value="إدارة">إدارة</option></select>
+                        <select id="cfg-principal-title" style="flex: 1; padding: 10px;"><option value="مدير المدرسة">مدير المدرسة</option><option value="مديرة المدرسة">مديرة المدرسة</option><option value="مدير المجمع">مدير المجمع</option><option value="إدارة">إدارة</option><option value="إشراف">إشراف</option><option value="بقيادة">بقيادة</option></select>
                         <input type="text" id="cfg-principal" style="flex: 1.5;" placeholder="اكتب اسم المدير هنا...">
                     </div>
                 </div>
             </div>
-            <div class="form-group"><label>شريط الأخبار:</label><input type="text" id="cfg-news" placeholder="اكتب الإعلانات الهامة ورسائل الترحيب هنا..."></div>
+            
+            <div id="lock-identity-container" style="background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; border: 1px dashed var(--danger); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="cfg-lock-identity" style="width: auto; cursor: pointer;">
+                <label for="cfg-lock-identity" style="margin: 0; color: var(--danger); font-weight: bold; cursor: pointer;">🔒 قفل هوية المدرسة (لتثبيت الاسم عند بيع النسخة)</label>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group" style="flex: 2;"><label>شريط الأخبار:</label><input type="text" id="cfg-news" placeholder="اكتب الإعلانات الهامة ورسائل الترحيب هنا..."></div>
+                <div class="form-group" style="flex: 1;">
+                    <label>🎨 المظهر (الثيم):</label>
+                    <select id="cfg-theme">
+                        <option value="default">الرسمي (داكن فخم)</option>
+                        <option value="light">النهاري (فاتح)</option>
+                        <option value="national">اليوم الوطني 🇸🇦</option>
+                        <option value="founding">يوم التأسيس 🐪</option>
+                        <option value="ramadan">شهر رمضان 🌙</option>
+                    </select>
+                </div>
+            </div>
             
             <div class="section-title" style="color: var(--success);">👨‍🏫 سجل المعلمين والمعلمات (لإضافتهم في الجدول)</div>
             <div style="background: rgba(34, 197, 94, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed var(--success); margin-bottom: 15px;">
@@ -257,28 +311,25 @@
                     </div>
                 </div>
                 <div id="teachers-roster-list" class="checkbox-grid" style="min-height: auto; padding: 5px;"></div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">* أضف أسماء المعلمين هنا لتتمكن من اختيارهم بسهولة عند تعبئة جدول الفصول بالأسفل.</div>
             </div>
 
-            <div class="section-title" style="color: var(--primary);">🎨 تخصيص واجهة العداد</div>
+            <div class="section-title" style="color: var(--primary);">🎨 تخصيص واجهة العداد وفوتر الإدارة</div>
             <div style="background: rgba(56, 189, 248, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed var(--primary); margin-bottom: 15px;">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>حجم اسم الحصة (تكبير/تصغير):</label>
+                        <label>حجم اسم الحصة:</label>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <input type="range" id="cfg-name-size" min="2" max="8" step="0.5" value="3.5" oninput="updateRangeVal('name-val', this.value)">
                             <span id="name-val" style="width: 30px; text-align: left;">3.5</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>حجم الأرقام (الوقت المتبقي):</label>
+                        <label>حجم الأرقام:</label>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <input type="range" id="cfg-timer-size" min="3" max="10" step="0.5" value="4.5" oninput="updateRangeVal('timer-val', this.value)">
                             <span id="timer-val" style="width: 30px; text-align: left;">4.5</span>
                         </div>
                     </div>
-                </div>
-                <div class="form-row">
                     <div class="form-group">
                         <label>سُمك شريط التقدم:</label>
                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -286,8 +337,18 @@
                             <span id="prog-val" style="width: 30px; text-align: left;">1.5</span>
                         </div>
                     </div>
-                    <div class="form-group"><label>لون الشريط (الحصص):</label><input type="color" id="cfg-prog-color" value="#38bdf8" style="padding: 0; height: 35px;"></div>
-                    <div class="form-group"><label>لون الشريط (الفسحة):</label><input type="color" id="cfg-break-color" value="#10b981" style="padding: 0; height: 35px;"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>👑 حجم خط اسم المدير (في الأسفل):</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="cfg-principal-size" min="0.5" max="3" step="0.1" value="1" oninput="updateRangeVal('prin-val', this.value)">
+                            <span id="prin-val" style="width: 30px; text-align: left;">1.0</span>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>لون اسم المدير:</label><input type="color" id="cfg-principal-color" value="#ffffff" style="padding: 0; height: 35px;"></div>
+                    <div class="form-group"><label>لون شريط الحصص:</label><input type="color" id="cfg-prog-color" value="#38bdf8" style="padding: 0; height: 35px;"></div>
+                    <div class="form-group"><label>لون الفسحة:</label><input type="color" id="cfg-break-color" value="#10b981" style="padding: 0; height: 35px;"></div>
                 </div>
             </div>
 
@@ -381,7 +442,7 @@
                 <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--success); color: var(--success);" onclick="importConfig()">📥 استيراد</button>
                 <button class="btn" style="flex:1; background: transparent; border: 1px dashed var(--danger); color: var(--danger);" onclick="factoryReset()">🗑️ مسح كل شيء</button>
             </div>
-            <div style="font-size: 12px; color: var(--success); margin-top: 5px; text-align: center; font-weight: bold;">* "نسخة المعلمين" تدعم المسارات الذكية والمساعد الشخصي للمعلم.</div>
+            <div style="font-size: 12px; color: var(--success); margin-top: 5px; text-align: center; font-weight: bold;">* النظام محمي ومعد للتسويق التجاري.</div>
         </div>
     </div>
 
@@ -422,7 +483,6 @@
                 <div class="logo-right" id="header-logo-edu" style="display: none;"><img id="img-header-edu" src="" class="education-logo-img"></div>
                 <div class="logo-left">
                     <img id="img-header-school" src="" class="education-logo-img" style="display: none;">
-                    <button class="btn-theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️ فاتح</button>
                 </div>
                 <div class="school-info"><h1 id="display-school-name">--</h1></div>
                 <div class="clocks-container">
@@ -463,8 +523,8 @@
                 <div class="ticker-label">إعلانات</div><div class="ticker-wrapper" style="direction: ltr;"><div class="ticker-content" id="display-news" style="direction: rtl;"></div></div>
             </div>
             <div class="footer-bar">
-                <div id="display-principal-name" style="flex:1;"></div>
-                <div style="flex:1; text-align:center;">نظام الإدارة المدرسية V52 💎</div>
+                <div id="display-principal-name" style="flex:1; font-weight: bold;"></div>
+                <div style="flex:1; text-align:center;">نظام الإدارة المدرسية V53 🚀</div>
                 <div style="flex:1; text-align:left;" id="settings-btn-container">
                     <button class="btn" style="padding: 2px 10px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);" onclick="openSettings()">⚙️ إعدادات النظام</button>
                 </div>
@@ -473,7 +533,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'SMART_SCHOOL_V52_DIAMOND'; 
+        const STORAGE_KEY = 'SMART_SCHOOL_V53_INVESTOR'; 
         let systemActive = false, schoolConfig = null, dynamicSchedule = [];
         let classesList = [], fullTimetable = { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} }; 
         let teachersRoster = []; 
@@ -484,15 +544,21 @@
         let mediaImagesBase64 = ["", "", "", ""]; let mediaCyclerTimer = null; let isShowingMedia = false;
 
         function updateRangeVal(id, val) { try { document.getElementById(id).innerText = val; } catch(e){} }
+        
         function applyCustomUI() {
-            if(!schoolConfig || !schoolConfig.ui) return;
+            if(!schoolConfig) return;
             try {
                 const root = document.documentElement;
-                root.style.setProperty('--period-name-size', schoolConfig.ui.nameSize + 'vw');
-                root.style.setProperty('--timer-size', schoolConfig.ui.timerSize + 'vw');
-                root.style.setProperty('--progress-height', schoolConfig.ui.progHeight + 'vh');
-                root.style.setProperty('--custom-prog-color', schoolConfig.ui.progColor);
-                root.style.setProperty('--custom-break-color', schoolConfig.ui.breakColor);
+                document.body.setAttribute('data-theme', schoolConfig.theme || 'default');
+                if(schoolConfig.ui) {
+                    root.style.setProperty('--period-name-size', schoolConfig.ui.nameSize + 'vw');
+                    root.style.setProperty('--timer-size', schoolConfig.ui.timerSize + 'vw');
+                    root.style.setProperty('--progress-height', schoolConfig.ui.progHeight + 'vh');
+                    root.style.setProperty('--custom-prog-color', schoolConfig.ui.progColor);
+                    root.style.setProperty('--custom-break-color', schoolConfig.ui.breakColor);
+                    root.style.setProperty('--footer-principal-size', (schoolConfig.ui.principalSize || 1) + 'vw');
+                    root.style.setProperty('--footer-principal-color', schoolConfig.ui.principalColor || '#ffffff');
+                }
             } catch(e){}
         }
 
@@ -505,16 +571,6 @@
                 }
             } catch(e){}
         }
-
-        function toggleTheme() {
-            try {
-                const body = document.body; const btn = document.getElementById('theme-btn');
-                body.classList.toggle('light-mode');
-                if (body.classList.contains('light-mode')) { localStorage.setItem('school_theme_pref', 'light'); if(btn) btn.innerHTML = '🌙 داكن'; } 
-                else { localStorage.setItem('school_theme_pref', 'dark'); if(btn) btn.innerHTML = '☀️ فاتح'; }
-            } catch(e) {}
-        }
-        function loadThemePreference() { try { if (localStorage.getItem('school_theme_pref') === 'light') { document.body.classList.add('light-mode'); let btn = document.getElementById('theme-btn'); if(btn) btn.innerHTML = '🌙 داكن'; } } catch(e){} }
 
         function toggleManualTimeInputs() {
             try {
@@ -598,7 +654,8 @@
                 breaks: [{ after: 3, duration: 15, type: 'all', classes: [], group1: [], group2: [] }, { after: 5, duration: 15, type: 'all', classes: [], group1: [], group2: [] }],
                 prayerAfter: 6, prayerDur: 20, enableTable: true, eduLogo: null, schoolLogo: null, manualTime: { enabled: false, setAtReal: 0, targetTime: 0 },
                 enableMedia: false, mediaLayout: 1, mainDuration: 15, mediaDuration: 10, mediaImages: ["", "", "", ""],
-                ui: { nameSize: 3.5, timerSize: 4.5, progHeight: 1.5, progColor: "#38bdf8", breakColor: "#10b981" }
+                theme: "default", isLocked: false,
+                ui: { nameSize: 3.5, timerSize: 4.5, progHeight: 1.5, progColor: "#38bdf8", breakColor: "#10b981", principalSize: 1.0, principalColor: "#ffffff" }
             };
             classesList = [];
             teachersRoster = [];
@@ -683,7 +740,7 @@
                 let keysToRemove = []; for (let i = 0; i < localStorage.length; i++) { let key = localStorage.key(i); if (key && key.startsWith('SMART_SCHOOL_') && key !== STORAGE_KEY) keysToRemove.push(key); } keysToRemove.forEach(k => localStorage.removeItem(k));
             } catch(e) {}
 
-            loadThemePreference(); initTimeDropdowns();
+            initTimeDropdowns();
             
             if (typeof window.INJECTED_PAYLOAD !== 'undefined') {
                 try {
@@ -705,7 +762,7 @@
                     const savedData = localStorage.getItem(STORAGE_KEY);
                     if (savedData) {
                         let parsed = JSON.parse(savedData); schoolConfig = parsed.config;
-                        if(!schoolConfig.breaks) schoolConfig.breaks = []; if(!schoolConfig.manualTime) schoolConfig.manualTime = { enabled: false, setAtReal: 0, targetTime: 0 }; if(!schoolConfig.customDurs) schoolConfig.customDurs = []; if(!schoolConfig.ui) schoolConfig.ui = { nameSize: 3.5, timerSize: 4.5, progHeight: 1.5, progColor: "#38bdf8", breakColor: "#10b981" }; if(schoolConfig.mediaImages) mediaImagesBase64 = schoolConfig.mediaImages;
+                        if(!schoolConfig.breaks) schoolConfig.breaks = []; if(!schoolConfig.manualTime) schoolConfig.manualTime = { enabled: false, setAtReal: 0, targetTime: 0 }; if(!schoolConfig.customDurs) schoolConfig.customDurs = []; if(!schoolConfig.ui) schoolConfig.ui = { nameSize: 3.5, timerSize: 4.5, progHeight: 1.5, progColor: "#38bdf8", breakColor: "#10b981", principalSize: 1.0, principalColor: "#ffffff" }; if(schoolConfig.mediaImages) mediaImagesBase64 = schoolConfig.mediaImages; if(!schoolConfig.theme) schoolConfig.theme = 'default';
                         classesList = parsed.classes || []; fullTimetable = parsed.timetable || { 0:{}, 1:{}, 2:{}, 3:{}, 4:{} };
                         teachersRoster = parsed.teachers || [];
                     } else { loadDemoData(); }
@@ -736,6 +793,7 @@
             generateSchedule();
         }
 
+        // --- الفسح التبادلية والمسارات ---
         function toggleBreakType(idx) {
             let type = document.getElementById(`cfg-break-type-${idx}`).value;
             let classesContainer = document.getElementById(`break-classes-container-${idx}`);
@@ -788,7 +846,7 @@
                             <div id="break-split-g1-${i}" class="checkbox-grid" style="margin-bottom:10px;"></div>
                             <label style="color:var(--success);">المسار الثاني (يدرسون أولاً 📚 ثم يأخذون الفسحة 🍔):</label>
                             <div id="break-split-g2-${i}" class="checkbox-grid"></div>
-                            <div style="font-size:11px; color:var(--text-muted); margin-top:5px;">* النظام سيقرأ وقت الحصة العادي 45د ثم الفسحة 15د، ولكنه سيطبق التبادل بذكاء في الجدول السفلي.</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:5px;">* النظام سيقرأ وقت الحصة العادي ثم الفسحة، ولكنه سيطبق التبادل بذكاء في الجدول السفلي.</div>
                         </div>
                     </div>`; 
                 }
@@ -820,14 +878,36 @@
             } catch(e){}
         }
 
+        // --- القفل السري ---
+        function secretUnlock() {
+            document.getElementById('cfg-school').disabled = false;
+            document.getElementById('cfg-principal-title').disabled = false;
+            document.getElementById('cfg-principal').disabled = false;
+            document.getElementById('lock-identity-container').style.display = 'flex';
+            document.getElementById('cfg-lock-identity').checked = false;
+            alert('🔓 تم فتح القفل السري بنجاح! يمكنك الآن تعديل بيانات هوية المدرسة.');
+        }
+
         function populateSettingsForm() {
             try {
                 if(!schoolConfig) return;
                 document.getElementById('cfg-school').value = schoolConfig.schoolName; document.getElementById('cfg-principal-title').value = schoolConfig.principalTitle; document.getElementById('cfg-principal').value = schoolConfig.principalName; document.getElementById('cfg-news').value = schoolConfig.newsTicker; document.getElementById('cfg-start').value = schoolConfig.startTime; document.getElementById('cfg-assembly-dur').value = schoolConfig.assemblyDur; document.getElementById('cfg-lesson-dur').value = schoolConfig.lessonDur; document.getElementById('cfg-total-lessons').value = schoolConfig.totalLessons; document.getElementById('cfg-prayer-after').value = schoolConfig.prayerAfter; document.getElementById('cfg-prayer-dur').value = schoolConfig.prayerDur; document.getElementById('cfg-enable-table').checked = schoolConfig.enableTable; 
                 document.getElementById('cfg-num-breaks').value = schoolConfig.breaks.length; renderDynamicBreaksUI(); updateLogoPreviews(); renderTeachersRoster();
 
+                document.getElementById('cfg-theme').value = schoolConfig.theme || 'default';
+
+                let isLocked = schoolConfig.isLocked || false;
+                document.getElementById('cfg-lock-identity').checked = isLocked;
+                if(isLocked) {
+                    document.getElementById('cfg-school').disabled = true;
+                    document.getElementById('cfg-principal-title').disabled = true;
+                    document.getElementById('cfg-principal').disabled = true;
+                    document.getElementById('lock-identity-container').style.display = 'none';
+                }
+
                 if(schoolConfig.ui) {
                     document.getElementById('cfg-name-size').value = schoolConfig.ui.nameSize; document.getElementById('name-val').innerText = schoolConfig.ui.nameSize; document.getElementById('cfg-timer-size').value = schoolConfig.ui.timerSize; document.getElementById('timer-val').innerText = schoolConfig.ui.timerSize; document.getElementById('cfg-prog-height').value = schoolConfig.ui.progHeight; document.getElementById('prog-val').innerText = schoolConfig.ui.progHeight; document.getElementById('cfg-prog-color').value = schoolConfig.ui.progColor; document.getElementById('cfg-break-color').value = schoolConfig.ui.breakColor;
+                    document.getElementById('cfg-principal-size').value = schoolConfig.ui.principalSize || 1; document.getElementById('prin-val').innerText = schoolConfig.ui.principalSize || 1; document.getElementById('cfg-principal-color').value = schoolConfig.ui.principalColor || '#ffffff';
                 }
 
                 document.getElementById('cfg-enable-media').checked = schoolConfig.enableMedia || false; document.getElementById('cfg-media-layout').value = schoolConfig.mediaLayout || 1; document.getElementById('cfg-main-duration').value = schoolConfig.mainDuration || 15; document.getElementById('cfg-media-duration').value = schoolConfig.mediaDuration || 10; toggleMediaSettings();
@@ -867,7 +947,8 @@
 
                 const config = { 
                     schoolName: document.getElementById('cfg-school').value, principalTitle: document.getElementById('cfg-principal-title').value, principalName: document.getElementById('cfg-principal').value, newsTicker: document.getElementById('cfg-news').value, startTime: document.getElementById('cfg-start').value, assemblyDur: parseInt(document.getElementById('cfg-assembly-dur').value)||0, lessonDur: parseInt(document.getElementById('cfg-lesson-dur').value)||45, totalLessons: tL, breaks: breaksArr, prayerAfter: parseInt(document.getElementById('cfg-prayer-after').value)||0, prayerDur: parseInt(document.getElementById('cfg-prayer-dur').value)||0, enableTable: document.getElementById('cfg-enable-table').checked, eduLogo: schoolConfig.eduLogo, schoolLogo: schoolConfig.schoolLogo, manualTime: manualTimeOpts, useCustomDurs: useCustomDurs, customDurs: cDurs, enableMedia: document.getElementById('cfg-enable-media').checked, mediaLayout: parseInt(document.getElementById('cfg-media-layout').value) || 1, mainDuration: parseInt(document.getElementById('cfg-main-duration').value) || 15, mediaDuration: parseInt(document.getElementById('cfg-media-duration').value) || 10, mediaImages: mediaImagesBase64,
-                    ui: { nameSize: parseFloat(document.getElementById('cfg-name-size').value) || 3.5, timerSize: parseFloat(document.getElementById('cfg-timer-size').value) || 4.5, progHeight: parseFloat(document.getElementById('cfg-prog-height').value) || 1.5, progColor: document.getElementById('cfg-prog-color').value, breakColor: document.getElementById('cfg-break-color').value }
+                    theme: document.getElementById('cfg-theme').value, isLocked: document.getElementById('cfg-lock-identity').checked,
+                    ui: { nameSize: parseFloat(document.getElementById('cfg-name-size').value) || 3.5, timerSize: parseFloat(document.getElementById('cfg-timer-size').value) || 4.5, progHeight: parseFloat(document.getElementById('cfg-prog-height').value) || 1.5, progColor: document.getElementById('cfg-prog-color').value, breakColor: document.getElementById('cfg-break-color').value, principalSize: parseFloat(document.getElementById('cfg-principal-size').value) || 1.0, principalColor: document.getElementById('cfg-principal-color').value }
                 };
                 localStorage.setItem(STORAGE_KEY, JSON.stringify({ config: config, classes: classesList, teachers: teachersRoster, timetable: fullTimetable })); 
                 alert("تم الحفظ بنجاح!"); location.reload(); 
@@ -901,7 +982,7 @@
                 let finalHtml = "<!DOCTYPE html>\n<html lang=\"ar\" dir=\"rtl\">\n" + doc.documentElement.innerHTML + "\n</html>";
                 let schoolNameSafe = (schoolConfig.schoolName || "المدرسة").replace(/\s+/g, '_');
                 let dateStr = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
-                let filename = `جدول_${schoolNameSafe}_${dateStr}.html`;
+                let filename = `نظام_${schoolNameSafe}_النسخة_التجارية.html`;
                 
                 let blob = new Blob(['\ufeff' + finalHtml], { type: 'text/html;charset=utf-8' }); 
                 let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
@@ -979,7 +1060,6 @@
                     let splitBreak = schoolConfig.breaks && schoolConfig.breaks.find(b => b.after === i - 1 && b.type === 'split');
                     
                     if (splitBreak) {
-                        // الحصة الرسمية (45 دقيقة مثلاً)
                         dynamicSchedule.push({ 
                             name: "الحصة " + ordinals[i], 
                             start: current, 
@@ -997,7 +1077,6 @@
                         }); 
                         current += cDur; 
                         
-                        // الفسحة التبادلية الرسمية التي تليها
                         let sIdx = schoolConfig.breaks.indexOf(splitBreak);
                         dynamicSchedule.push({
                             name: "الفسحة " + ordinals[sIdx+1],
@@ -1006,7 +1085,7 @@
                             startSecs: current * 60, 
                             endSecs: (current + splitBreak.duration) * 60,
                             type: 'break',
-                            lessonIdx: lessonCounter, // يشير لنفس الحصة للمسار الثاني
+                            lessonIdx: lessonCounter,
                             isBreak: true,
                             breakIndex: sIdx,
                             isAllBreak: false,
@@ -1032,7 +1111,6 @@
                         current += cDur; lessonCounter++; 
                     }
                     
-                    // الفسح العادية (غير التبادلية)
                     if (schoolConfig.breaks) { 
                         schoolConfig.breaks.forEach((brk, idx) => { 
                             if (brk.after === i && brk.duration > 0 && brk.type !== 'split') { 
@@ -1083,7 +1161,7 @@
                 if(gridContainer) gridContainer.style.display = schoolConfig.enableTable ? 'flex' : 'none'; 
                 
                 let principalNameObj = document.getElementById('display-principal-name');
-                if(principalNameObj) principalNameObj.innerText = schoolConfig.principalName ? `${schoolConfig.principalTitle||"إدارة"}: ${schoolConfig.principalName}` : "لم يتم تحديد الإدارة";
+                if(principalNameObj) principalNameObj.innerText = schoolConfig.principalName ? `${schoolConfig.principalTitle||"إدارة"}: ${schoolConfig.principalName}` : "";
 
                 if(schoolConfig.enableMedia) { 
                     const grid = document.getElementById('live-media-grid'); 
@@ -1165,7 +1243,6 @@
                 let myCurrentClass = null;
                 let myNextClassObj = null;
 
-                // تحديد الحصة الحالية مع مراعاة الانفصال البصري للمسارات
                 if (activeItem && (activeItem.type === 'lesson' || activeItem.type === 'break')) {
                     let elapsed = totalSecs - activeItem.startSecs;
                     let targetLessonIdx = activeItem.type === 'lesson' ? activeItem.lessonIdx : (activeItem.isSplitBreak ? activeItem.lessonIdx : -1);
@@ -1195,7 +1272,6 @@
                     }
                 }
 
-                // تحديد الحصة القادمة بدقة 
                 let foundNext = false;
                 for (let i = 0; i < dynamicSchedule.length; i++) {
                     let item = dynamicSchedule[i];
@@ -1281,7 +1357,6 @@
                 let dayIdx = {0:0,1:1,2:2,3:3,4:4}[now.getDay()];
                 if(dayIdx === undefined) { grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:2vw;padding-top:2vh;">عطلة نهاية الأسبوع</div>`; title.innerText = `عطلة`; return; } 
 
-                // منطق الانفصال البصري - عرض الجدول السفلي وقت الحصة
                 if (activeItem.type === 'lesson' && activeItem.hasSplitBreak) {
                     title.innerText = `جدول الفصول - ${activeItem.name}`;
                     let html = "", count = 0;
@@ -1305,7 +1380,6 @@
                     return;
                 }
 
-                // منطق الانفصال البصري - عرض الجدول السفلي وقت الفسحة
                 if (activeItem.type === 'break' && activeItem.isSplitBreak) {
                     title.innerText = `جدول الفصول - ${activeItem.name}`;
                     displayIdx = activeItem.lessonIdx;
